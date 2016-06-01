@@ -1,3 +1,6 @@
+if arg[#arg] == "-debug" then debug = true else debug = false end
+if debug then require("mobdebug").start() end
+
 function love.load()
   currentSeason = 1
   seasons = { "spring", "summer", "autumn", "winter" }
@@ -91,9 +94,11 @@ function love.mousepressed(x, y, button)
   if selectedResource.key then
     for k, issue in ipairs(issues) do
       if x > k * 60 and x < k * 60 + 50 and y > 40 and y < 90 then
-        table.insert( issue.resources, selectedResource.resource )
-        table.remove( resources, selectedResource.key )
-        selectedResource = {}
+        if #issue.resources < #issue.needs then
+          table.insert( issue.resources, selectedResource.resource )
+          table.remove( resources, selectedResource.key )
+          selectedResource = {}
+        end
       end
     end
   end
@@ -139,32 +144,39 @@ end
 
 function resolveAllIssues()
   for _, issue in ipairs(issues) do
-    if math.random() > 0.5 then
-      issue.done = true
-      issue:resolve()
-    end    
+    issue.done = true
+    issue:resolve()
   end
   
 end
 
-function revealNewProblems()
-  table.insert( issues, {
-    type = "problem",
+function newIssue(issueType, needs, gain, lose)
+  return {
+    type = issueType,
+    needs = needs,
+    gain = gain,
+    lose = lose,
+    resources = {},
     resolve = function(self)
-      score = score + 1
-    end,
-    resources = {}
-  } )
+      if #self.needs == #self.resources then
+        self:gain()
+      else
+        self:lose()
+      end
+    end    
+  }
+end
+
+function revealNewProblems()
+  table.insert( issues,
+    newIssue("problem", {1}, function() end, function() score = score - 1 end)
+  )
 end
 
 function revealNewOpporunities()
-  table.insert( issues, {
-    type = "opportunity",
-    resolve = function(self) 
-      table.insert( resources, { type = "might" } )
-    end,
-    resources = {}
-  } )  
+  table.insert( issues,
+    newIssue("opportunity", {}, function() score = score + 1 end, function() end)
+  )  
 end
 
 function returnAllResources()

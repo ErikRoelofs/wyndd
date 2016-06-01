@@ -11,6 +11,18 @@ function love.load()
       type = "wealth"
     },
     {
+      type = "wealth"
+    },
+    {
+      type = "wealth"
+    },
+    {
+      type = "might"
+    },
+    {
+      type = "might"
+    },
+    {
       type = "might"
     }    
   }
@@ -34,11 +46,11 @@ function love.draw(dt)
   love.graphics.print("mouse: " .. mouse.x .. "," .. mouse.y,170, 20 )
   
   for k, issue in ipairs(issues) do
-    drawIssue(issue, k * 60, 40)    
+    drawIssue(issue, k * 160 - 150, 40)    
   end
 
   for k, resource in ipairs(resources) do
-    drawResource(resource, k * 20, 100 )
+    drawResource(resource, k * 20, 250 )
   end
 
 end
@@ -49,7 +61,7 @@ function drawIssue(issue, x, y)
     elseif issue.type == "opportunity" then
       love.graphics.setColor(0,150,0,255)
     end
-    love.graphics.rectangle("fill", x, y, 50,50)
+    love.graphics.rectangle("fill", x, y, 150,150)
     
     if issue.resources then
       for k, resource in ipairs(issue.resources) do
@@ -58,14 +70,14 @@ function drawIssue(issue, x, y)
     end
     
     love.graphics.setColor(255,255,255,255)
-    love.graphics.rectangle("fill", x+42,y+42, 7, 7)
+    love.graphics.rectangle("fill", x+2,y+2, 7, 7)
     
     if issue:metNeeds() then
       love.graphics.setColor(0,255,0,255)
     else
       love.graphics.setColor(255,0,0,255)
     end
-    love.graphics.rectangle("fill", x+43,y+43, 5, 5)
+    love.graphics.rectangle("fill", x+3,y+3, 5, 5)
     
 end
 
@@ -74,7 +86,6 @@ function drawResource(resource, x, y)
     love.graphics.setColor(255,255,255,255)
     love.graphics.rectangle("fill", x-1, y-1, 17,17)
   end
-  
   
   if resource.type == "wealth" then
     love.graphics.setColor(0,200,150,255)
@@ -95,7 +106,7 @@ function love.mousepressed(x, y, button)
   mouse.y = y
       
   for k, resource in ipairs(resources) do
-    if x > k * 20 and x < k * 20 + 15 and y > 100 and y < 115 then
+    if x > k * 20 and x < k * 20 + 15 and y > 250 and y < 270 then
       selectedResource.key = k
       selectedResource.resource = resource
     end    
@@ -103,9 +114,8 @@ function love.mousepressed(x, y, button)
   
   if selectedResource.key then
     for k, issue in ipairs(issues) do
-      if x > k * 60 and x < k * 60 + 50 and y > 40 and y < 90 then
-        if issue:wants(selectedResource.resource) then
-          table.insert( issue.resources, selectedResource.resource )
+      if x > k * 160 - 150 and x < k * 160 and y > 40 and y < 190 then
+        if issue:give(selectedResource.resource) then          
           table.remove( resources, selectedResource.key )
           selectedResource = {}
         end
@@ -114,11 +124,11 @@ function love.mousepressed(x, y, button)
   end
 end
 
---[[
+--[[          
 - assign resources
 - end turn
 - resolve all open issues
- - create new problems
+ - create new problems1     
  - take resources
  - update counters
  - change kingdom parts
@@ -147,7 +157,7 @@ function endTheTurn()
   checkWinLose()
   nextSeason()
   revealNewProblems()
-  revealNewOpporunities()
+  revealNewOpportunities()
   backToAssignPhase()
   cleanup()
 end
@@ -177,9 +187,11 @@ function newIssue(issueType, needs, gain, lose)
     metNeeds = function(self)
       return #self.needs == #self.resources 
     end,
-    wants = function(self, resource)
+    give = function(self, resource)
       for _, want in ipairs(self.needs) do
-        if want == resource.type then
+        if not want.met and want.type == resource.type then
+          want.met = true
+          table.insert(self.resources, resource)
           return true
         end
       end
@@ -190,13 +202,13 @@ end
 
 function revealNewProblems()
   table.insert( issues,
-    newIssue("problem", {"might"}, function() end, function() score = score - 1 end)
+    newIssue("problem", {{type = "might"},{type = "wealth"},{type = "might"}}, function() end, function() score = score - 1 end)
   )
 end
 
-function revealNewOpporunities()
+function revealNewOpportunities()
   table.insert( issues,
-    newIssue("opportunity", {"wealth"}, function() score = score + 1 end, function() end)
+    newIssue("opportunity", {{type = "wealth"}}, function() score = score + 1 end, function() end)
   )  
 end
 

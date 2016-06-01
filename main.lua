@@ -45,9 +45,9 @@ end
 
 function drawIssue(issue, x, y)
     if issue.type == "problem" then
-      love.graphics.setColor(255,0,0,255)
+      love.graphics.setColor(150,0,0,255)
     elseif issue.type == "opportunity" then
-      love.graphics.setColor(0,255,0,255)
+      love.graphics.setColor(0,150,0,255)
     end
     love.graphics.rectangle("fill", x, y, 50,50)
     
@@ -56,6 +56,16 @@ function drawIssue(issue, x, y)
         drawResource(resource, x - 15 + k * 20, y + 20)
       end
     end
+    
+    love.graphics.setColor(255,255,255,255)
+    love.graphics.rectangle("fill", x+42,y+42, 7, 7)
+    
+    if issue:metNeeds() then
+      love.graphics.setColor(0,255,0,255)
+    else
+      love.graphics.setColor(255,0,0,255)
+    end
+    love.graphics.rectangle("fill", x+43,y+43, 5, 5)
     
 end
 
@@ -94,7 +104,7 @@ function love.mousepressed(x, y, button)
   if selectedResource.key then
     for k, issue in ipairs(issues) do
       if x > k * 60 and x < k * 60 + 50 and y > 40 and y < 90 then
-        if #issue.resources < #issue.needs then
+        if issue:wants(selectedResource.resource) then
           table.insert( issue.resources, selectedResource.resource )
           table.remove( resources, selectedResource.key )
           selectedResource = {}
@@ -158,24 +168,35 @@ function newIssue(issueType, needs, gain, lose)
     lose = lose,
     resources = {},
     resolve = function(self)
-      if #self.needs == #self.resources then
+      if self:metNeeds() then
         self:gain()
       else
         self:lose()
       end
-    end    
+    end,
+    metNeeds = function(self)
+      return #self.needs == #self.resources 
+    end,
+    wants = function(self, resource)
+      for _, want in ipairs(self.needs) do
+        if want == resource.type then
+          return true
+        end
+      end
+      return false
+    end
   }
 end
 
 function revealNewProblems()
   table.insert( issues,
-    newIssue("problem", {1}, function() end, function() score = score - 1 end)
+    newIssue("problem", {"might"}, function() end, function() score = score - 1 end)
   )
 end
 
 function revealNewOpporunities()
   table.insert( issues,
-    newIssue("opportunity", {}, function() score = score + 1 end, function() end)
+    newIssue("opportunity", {"wealth"}, function() score = score + 1 end, function() end)
   )  
 end
 

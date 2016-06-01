@@ -12,12 +12,14 @@ function love.load()
     }    
   }
   score = 0
+  mouse = { x = 0, y = 0 }
+  selectedResource = {}
   
   --verify()
 end
 
 function love.update(dt)
-  
+  --mouse.x, mouse.y = love.mouse:getPosition()
 end
 
 function love.draw(dt)
@@ -26,30 +28,74 @@ function love.draw(dt)
   
   love.graphics.print("score: " .. score ,100, 20 )
   
+  love.graphics.print("mouse: " .. mouse.x .. "," .. mouse.y,170, 20 )
+  
   for k, issue in ipairs(issues) do
+    drawIssue(issue, k * 60, 40)    
+  end
+
+  for k, resource in ipairs(resources) do
+    drawResource(resource, k * 20, 100 )
+  end
+
+end
+
+function drawIssue(issue, x, y)
     if issue.type == "problem" then
       love.graphics.setColor(255,0,0,255)
     elseif issue.type == "opportunity" then
       love.graphics.setColor(0,255,0,255)
     end
-    love.graphics.rectangle("fill", k * 20, 40, 15,15)
-  end
-
-  for k, resource in ipairs(resources) do
-    if resource.type == "wealth" then
-      love.graphics.setColor(0,200,150,255)
-    elseif resource.type == "might" then
-      love.graphics.setColor(100,100,100,255)
+    love.graphics.rectangle("fill", x, y, 50,50)
+    
+    if issue.resources then
+      for k, resource in ipairs(issue.resources) do
+        drawResource(resource, x - 15 + k * 20, y + 20)
+      end
     end
-    love.graphics.rectangle("fill", k * 20, 60, 15,15)
+    
+end
+
+function drawResource(resource, x, y)
+  if selectedResource.resource == resource then
+    love.graphics.setColor(255,255,255,255)
+    love.graphics.rectangle("fill", x-1, y-1, 17,17)
   end
-
-
+  
+  
+  if resource.type == "wealth" then
+    love.graphics.setColor(0,200,150,255)
+  elseif resource.type == "might" then
+    love.graphics.setColor(100,100,100,255)
+  end
+  love.graphics.rectangle("fill", x, y, 15,15)
 end
 
 function love.keypressed(key, scancode)
   if key == "q" then
     endTheTurn()
+  end
+end
+
+function love.mousepressed(x, y, button)
+  mouse.x = x
+  mouse.y = y
+      
+  for k, resource in ipairs(resources) do
+    if x > k * 20 and x < k * 20 + 15 and y > 100 and y < 115 then
+      selectedResource.key = k
+      selectedResource.resource = resource
+    end    
+  end
+  
+  if selectedResource.key then
+    for k, issue in ipairs(issues) do
+      if x > k * 60 and x < k * 60 + 50 and y > 40 and y < 90 then
+        table.insert( issue.resources, selectedResource.resource )
+        table.remove( resources, selectedResource.key )
+        selectedResource = {}
+      end
+    end
   end
 end
 
@@ -107,9 +153,7 @@ function revealNewProblems()
     resolve = function(self)
       score = score + 1
     end,
-    resources = {
-      { type = "wealth", consumable = true }
-    }
+    resources = {}
   } )
 end
 
@@ -118,7 +162,8 @@ function revealNewOpporunities()
     type = "opportunity",
     resolve = function(self) 
       table.insert( resources, { type = "might" } )
-    end
+    end,
+    resources = {}
   } )  
 end
 

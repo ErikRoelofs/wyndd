@@ -88,39 +88,50 @@ function endTheTurn()
   revealNewProblems()
   revealNewOpporunities()
   backToAssignPhase()
+  cleanup()
 end
 
 function resolveAllIssues()
   for _, issue in ipairs(issues) do
     if math.random() > 0.5 then
       issue.done = true
-      score = score + 1      
-    end
-    local i = #issues
-    while i > 0 do
-      if issues[i].done then
-        table.remove(issues, i)
-      end
-      i = i - 1
-    end
+      issue:resolve()
+    end    
   end
   
 end
 
 function revealNewProblems()
   table.insert( issues, {
-    type = "problem"
+    type = "problem",
+    resolve = function(self)
+      score = score + 1
+    end,
+    resources = {
+      { type = "wealth", consumable = true }
+    }
   } )
 end
 
 function revealNewOpporunities()
   table.insert( issues, {
-    type = "opportunity"
+    type = "opportunity",
+    resolve = function(self) 
+      table.insert( resources, { type = "might" } )
+    end
   } )  
 end
 
 function returnAllResources()
-
+  for i, issue in ipairs(issues) do
+    if issue.resources then
+      for r, resource in ipairs(issue.resources) do
+        if not resource.consumable then
+          table.insert(resources, resource)
+        end
+      end
+    end
+  end
 end
 
 function checkWinLose()
@@ -131,11 +142,20 @@ function backToAssignPhase()
   
 end
 
-function assignPhase()
-  
+function assignPhase()  
 end
 
-function verify() 
+function cleanup()
+  local i = #issues
+  while i > 0 do
+    if issues[i].done then
+      table.remove(issues, i)
+    end
+    i = i - 1
+  end
+end
+
+function verify()
   verifySeasons()
   verifyEndTheTurn()
 end

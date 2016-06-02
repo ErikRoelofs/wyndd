@@ -29,12 +29,10 @@ function love.load()
   score = 0
   mouse = { x = 0, y = 0 }
   selectedResource = {}
-  
-  --verify()
+    
 end
 
-function love.update(dt)
-  --mouse.x, mouse.y = love.mouse:getPosition()
+function love.update(dt)  
 end
 
 function love.draw(dt)
@@ -271,29 +269,4 @@ function cleanup()
     end
     i = i - 1
   end
-end
-
-function verify()
-  verifySeasons()
-  verifyEndTheTurn()
-end
-
-function verifySeasons() 
-  assert(getSeason() == "spring")
-  nextSeason()
-  assert(getSeason() == "summer")
-  nextSeason()
-  assert(getSeason() == "autumn")
-  nextSeason()
-  assert(getSeason() == "winter")
-  nextSeason()
-  assert(getSeason() == "spring")  
-end
-
-function verifyEndTheTurn()
-  endTheTurn()
-end
-
-function verifyAssignPhase()
-  assignPhase()
 end

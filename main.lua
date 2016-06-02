@@ -63,14 +63,13 @@ function drawIssue(issue, x, y)
     end
     love.graphics.rectangle("fill", x, y, 150,150)
     
-    if issue.resources then
-      for k, resource in ipairs(issue.resources) do
-        drawResource(resource, x - 15 + k * 20, y + 20)
-      end
+    for k, resource in ipairs(issue.resources) do
+      drawResource(resource, x - 15 + k * 20, y + 20)
     end
-    
+  
     love.graphics.setColor(255,255,255,255)
     love.graphics.rectangle("fill", x+2,y+2, 7, 7)
+    love.graphics.print(issue.type, x + 15, y + 2 )
     
     if issue:metNeeds() then
       love.graphics.setColor(0,255,0,255)
@@ -123,21 +122,6 @@ function love.mousepressed(x, y, button)
     end
   end
 end
-
---[[          
-- assign resources
-- end turn
-- resolve all open issues
- - create new problems1     
- - take resources
- - update counters
- - change kingdom parts
-- return all remaining resources
-- check win/lose
-V change to new season
-- reveal new problems/opportunities, close existing problems/opportunities
-- next turn
---]]
 
 function getSeason()
   return seasons[currentSeason]
@@ -214,11 +198,9 @@ end
 
 function returnAllResources()
   for i, issue in ipairs(issues) do
-    if issue.resources then
-      for r, resource in ipairs(issue.resources) do
-        if not resource.consumable then
-          table.insert(resources, resource)
-        end
+    for r, resource in ipairs(issue.resources) do
+      if not resource.consumable then
+        table.insert(resources, resource)
       end
     end
   end

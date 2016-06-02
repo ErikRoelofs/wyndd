@@ -17,6 +17,19 @@ function love.load()
   score = 0
   mouse = { x = 0, y = 0 }
   selectedResource = {}
+  
+  factions = {
+    {
+      name = "Derpderp",
+      standing = 5,
+      power = 5
+    },
+    {
+      name = "Narknark",
+      standing = 5,
+      power = 5
+    }    
+  }
     
 end
 
@@ -38,7 +51,20 @@ function love.draw(dt)
   for k, resource in ipairs(resources) do
     drawResource(resource, k * 20, 250 )
   end
+  
+  for k, faction in ipairs(factions) do
+    drawFaction(faction, -150 + 200 * k, 300 )
+  end
 
+end
+
+function drawFaction(faction, x, y)
+  
+  love.graphics.setColor(255,255,255,255)
+  love.graphics.print(faction.name, x, y)
+  love.graphics.print("standing: " .. faction.standing, x, y + 15)
+  love.graphics.print("power: " .. faction.power, x, y + 30)
+  
 end
 
 function drawIssue(issue, x, y)
@@ -215,8 +241,16 @@ end
 function newScoreReward(value)
   return {
     value = value, 
-    resolve = function() score = score + value end, 
-    draw = function(self, x, y) love.graphics.print( self.value .. " score", x, y) end 
+    resolve = function() 
+      score = score + value 
+    end, 
+    draw = function(self, x, y) 
+      if self.value > 0 then
+        love.graphics.print( "+" .. self.value .. " score", x, y) 
+      else
+        love.graphics.print( self.value .. " score", x, y) 
+      end 
+    end
   }
 end
 
@@ -228,10 +262,36 @@ function newResourceReward(resource)
   }  
 end
 
+function newStandingReward(faction, value)
+  return {
+      faction = faction,
+      value = value,
+      resolve = function(self) 
+        faction.standing = faction.standing + value
+      end,
+      draw = function(self, x, y)
+        love.graphics.print( self.value .. " standing with " .. faction.name, x, y)
+      end
+  }
+end
+
+function newPowerReward(faction, value)
+  return {
+      faction = faction,
+      value = value,
+      resolve = function(self) 
+        faction.power = faction.power + value
+      end,
+      draw = function(self, x, y)
+        love.graphics.print( self.value .. " power for " .. faction.name, x, y)
+      end
+  }
+end
+
 function revealNewProblems()
   table.insert( issues,
     newIssue("problem", {newResource("might"),newResource("wealth"),newResource("might")}, {}, {
-      newScoreReward(-1)  
+      newStandingReward(factions[1], 1)
     })
   )
 end
@@ -239,7 +299,7 @@ end
 function revealNewOpportunities()
   table.insert( issues,
     newIssue("opportunity", {newResource("might")}, {
-        newResourceReward(newResource("might"))
+        newPowerReward(factions[1], 1)
     }, {})
   )  
 end

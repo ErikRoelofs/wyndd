@@ -7,24 +7,12 @@ function love.load()
   
   issues = {}
   resources = {
-    {
-      type = "wealth"
-    },
-    {
-      type = "wealth"
-    },
-    {
-      type = "wealth"
-    },
-    {
-      type = "might"
-    },
-    {
-      type = "might"
-    },
-    {
-      type = "might"
-    }    
+    newResource("wealth"),
+    newResource("wealth"),
+    newResource("wealth"),
+    newResource("might"),
+    newResource("might"),
+    newResource("might"),    
   }
   score = 0
   mouse = { x = 0, y = 0 }
@@ -224,20 +212,42 @@ function newIssue(issueType, needs, gains, losses)
   }
 end
 
+function newScoreReward(value)
+  return {
+    value = value, 
+    resolve = function() score = score + value end, 
+    draw = function(self, x, y) love.graphics.print( self.value .. " score", x, y) end 
+  }
+end
+
+function newResourceReward(resource)
+  return {
+    resource = resource, 
+    resolve = function(self) table.insert(resources, self.resource) end, 
+    draw = function(self, x, y) drawResource(self.resource, x, y) end 
+  }  
+end
+
 function revealNewProblems()
   table.insert( issues,
-    newIssue("problem", {{type = "might"},{type = "wealth"},{type = "might"}}, {}, {
-        {resolve = function() score = score - 1 end, draw = function(self, x,y) love.graphics.print("-1 score", x, y) end }
+    newIssue("problem", {newResource("might"),newResource("wealth"),newResource("might")}, {}, {
+      newScoreReward(-1)  
     })
   )
 end
 
 function revealNewOpportunities()
   table.insert( issues,
-    newIssue("opportunity", {{type = "wealth"}}, {
-        {resolve = function() score = score + 1 end, draw = function(self, x,y) love.graphics.print("+1 score", x, y) end}
+    newIssue("opportunity", {newResource("might")}, {
+        newResourceReward(newResource("might"))
     }, {})
   )  
+end
+
+function newResource(type)
+  return {
+    type = type
+  }
 end
 
 function returnAllResources()

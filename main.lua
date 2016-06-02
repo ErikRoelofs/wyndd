@@ -63,8 +63,8 @@ function drawIssue(issue, x, y)
     end
     love.graphics.rectangle("fill", x, y, 150,150)
     
-    for k, resource in ipairs(issue.resources) do
-      drawResource(resource, x - 15 + k * 20, y + 20)
+    for k, need in ipairs(issue.needs) do
+      drawNeed(need, x - 15 + k * 20, y + 20)
     end
   
     love.graphics.setColor(255,255,255,255)
@@ -78,6 +78,26 @@ function drawIssue(issue, x, y)
     end
     love.graphics.rectangle("fill", x+3,y+3, 5, 5)
     
+end
+
+function drawNeed(need, x, y)
+  if need.type == "wealth" then
+    love.graphics.setColor(0,200,150,255)
+  elseif need.type == "might" then
+    love.graphics.setColor(100,100,100,255)
+  end
+  love.graphics.rectangle("fill", x, y, 15,15)
+  
+  love.graphics.setColor(255,255,255,255)
+  love.graphics.rectangle("fill", x, y, 5,5)
+  
+  if need.met then
+    love.graphics.setColor(0,255,0,255)
+  else
+    love.graphics.setColor(255,0,0,255)
+  end
+  love.graphics.rectangle("fill", x+1, y+1, 3,3)
+  
 end
 
 function drawResource(resource, x, y)

@@ -66,6 +66,14 @@ function drawIssue(issue, x, y)
     for k, need in ipairs(issue.needs) do
       drawNeed(need, x - 15 + k * 20, y + 20)
     end
+    
+    for k, gain in ipairs(issue.gains) do
+      drawGain(gain, x - 15 + k * 20, y + 40)
+    end
+  
+    for k, loss in ipairs(issue.losses) do
+      drawLoss(loss, x - 15 + k * 20, y + 60)
+    end
   
     love.graphics.setColor(255,255,255,255)
     love.graphics.rectangle("fill", x+2,y+2, 7, 7)
@@ -112,6 +120,16 @@ function drawResource(resource, x, y)
     love.graphics.setColor(100,100,100,255)
   end
   love.graphics.rectangle("fill", x, y, 15,15)
+end
+
+function drawGain(gain, x, y)
+  love.graphics.setColor(255,255,255,255)
+  gain:draw(x,y)
+end
+
+function drawLoss(loss, x, y)
+  love.graphics.setColor(255,255,255,255)
+  loss:draw(x,y)
 end
 
 function love.keypressed(key, scancode)
@@ -174,18 +192,22 @@ function resolveAllIssues()
   
 end
 
-function newIssue(issueType, needs, gain, lose)
+function newIssue(issueType, needs, gains, losses)
   return {
     type = issueType,
     needs = needs,
-    gain = gain,
-    lose = lose,
+    gains = gains,
+    losses = losses,
     resources = {},
     resolve = function(self)
       if self:metNeeds() then
-        self:gain()
+        for k, gain in ipairs(self.gains) do
+          gain:resolve()
+        end
       else
-        self:lose()
+        for k, loss in ipairs(self.losses) do
+          loss:resolve()
+        end
       end
     end,
     metNeeds = function(self)
@@ -206,13 +228,17 @@ end
 
 function revealNewProblems()
   table.insert( issues,
-    newIssue("problem", {{type = "might"},{type = "wealth"},{type = "might"}}, function() end, function() score = score - 1 end)
+    newIssue("problem", {{type = "might"},{type = "wealth"},{type = "might"}}, {}, {
+        {resolve = function() score = score - 1 end, draw = function(self, x,y) love.graphics.print("-1 score", x, y) end }
+    })
   )
 end
 
 function revealNewOpportunities()
   table.insert( issues,
-    newIssue("opportunity", {{type = "wealth"}}, function() score = score + 1 end, function() end)
+    newIssue("opportunity", {{type = "wealth"}}, {
+        {resolve = function() score = score + 1 end, draw = function(self, x,y) love.graphics.print("+1 score", x, y) end}
+    }, {})
   )  
 end
 

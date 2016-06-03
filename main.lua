@@ -106,6 +106,10 @@ function drawIssue(issue, x, y)
     end
     love.graphics.rectangle("fill", x+3,y+3, 5, 5)
     
+    if issue.repeats > 1 then
+      love.graphics.setColor(255,255,255,255)
+      love.graphics.print(issue.repeats .. "x", x, y+135)
+    end
 end
 
 function drawNeed(need, x, y)
@@ -219,19 +223,28 @@ function resolveAllIssues()
   
 end
 
-function newIssue(issueType, needs, gains, losses)
+function newIssue(issueType, needs, gains, losses, repeats)
   return {
     type = issueType,
     needs = needs,
     gains = gains,
     losses = losses,
+    repeats = repeats or 1,
     resources = {},
     resolve = function(self)
       if self:metNeeds() then
-        for k, gain in ipairs(self.gains) do
-          gain:resolve()
+        if self.repeats > 1 then
+          self.repeats = self.repeats - 1
+          for k, need in ipairs(self.needs) do
+            need.met = false
+          end
+          self.done = false
+        else
+          for k, gain in ipairs(self.gains) do
+            gain:resolve()
+          end
         end
-      else
+      else        
         for k, loss in ipairs(self.losses) do
           loss:resolve()
         end
@@ -339,8 +352,8 @@ end
 function revealNewOpportunities()
   table.insert( issues,
     newIssue("opportunity", {newResource("might")}, {
-        newPowerReward(factions[1], 1)
-    }, {})
+        newScoreReward(1000)
+    }, {}, 3)
   )  
 end
 
@@ -352,10 +365,14 @@ end
 
 function returnAllResources()
   for i, issue in ipairs(issues) do
-    for r, resource in ipairs(issue.resources) do
+    local r = #issue.resources
+    while r > 0 do
+      local resource = issue.resources[r]
       if not resource.consumable then
         table.insert(resources, resource)
       end
+      table.remove(issue.resources, r)
+      r = r -1
     end
   end
 end

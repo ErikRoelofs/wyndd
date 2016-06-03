@@ -1,6 +1,7 @@
 --[[
   chained issues
   multi-turn issues
+  persistent issues
   faction-based issues
   win/lose condition
   hungry needs
@@ -223,22 +224,20 @@ function resolveAllIssues()
   
 end
 
-function newIssue(issueType, needs, gains, losses, repeats)
+function newIssue(issueType, needs, gains, losses, repeats, persistent)
   return {
     type = issueType,
     needs = needs,
     gains = gains,
     losses = losses,
     repeats = repeats or 1,
+    persistent = persistent or false,
     resources = {},
     resolve = function(self)
       if self:metNeeds() then
         if self.repeats > 1 then
           self.repeats = self.repeats - 1
-          for k, need in ipairs(self.needs) do
-            need.met = false
-          end
-          self.done = false
+          self:clean()
         else
           for k, gain in ipairs(self.gains) do
             gain:resolve()
@@ -247,6 +246,9 @@ function newIssue(issueType, needs, gains, losses, repeats)
       else        
         for k, loss in ipairs(self.losses) do
           loss:resolve()
+          if self.persistent then
+            self:clean()
+          end
         end
       end
     end,
@@ -262,6 +264,12 @@ function newIssue(issueType, needs, gains, losses, repeats)
         end
       end
       return false
+    end,
+    clean = function(self)
+      for k, need in ipairs(self.needs) do
+        need.met = false
+      end
+      self.done = false
     end
   }
 end
@@ -330,9 +338,9 @@ end
 
 function revealNewProblems()
   table.insert( issues,
-    newIssue("problem", {newResource("might"),newResource("wealth"),newResource("might")}, {}, {
+    newIssue("problem", {newResource("wealth")}, {}, {
       newStandingReward(factions[1], -1)
-    })
+    }, 1, true)
   )
   if factions[1].standing < 3 then
     local reward = newIssue(
@@ -353,7 +361,10 @@ function revealNewOpportunities()
   table.insert( issues,
     newIssue("opportunity", {newResource("might")}, {
         newScoreReward(1000)
-    }, {}, 3)
+    },
+    {
+        newScoreReward(-5)
+    }, 3)
   )  
 end
 

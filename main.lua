@@ -1,3 +1,11 @@
+--[[
+  chained issues
+  multi-turn issues
+  faction-based issues
+  win/lose condition
+  hungry needs
+  multi-resources
+]]
 if arg[#arg] == "-debug" then debug = true else debug = false end
 if debug then require("mobdebug").start() end
 
@@ -201,8 +209,12 @@ end
 
 function resolveAllIssues()
   for _, issue in ipairs(issues) do
-    issue.done = true
-    issue:resolve()
+    issue.done = true    
+  end
+  for _, issue in ipairs(issues) do
+    if issue.done == true then
+      issue:resolve()
+    end
   end
   
 end
@@ -280,14 +292,26 @@ end
 
 function newPowerReward(faction, value)
   return {
-      faction = faction,
-      value = value,
-      resolve = function(self) 
-        faction.power = faction.power + value
-      end,
-      draw = function(self, x, y)
-        love.graphics.print( self.value .. " power for " .. faction.name, x, y)
-      end
+    faction = faction,
+    value = value,
+    resolve = function(self) 
+      faction.power = faction.power + value
+    end,
+    draw = function(self, x, y)
+      love.graphics.print( self.value .. " power for " .. faction.name, x, y)
+    end
+  }
+end
+
+function newIssueReward(issue)
+  return {
+    issue = issue,    
+    resolve = function(self) 
+      table.insert(issues, self.issue)
+    end,
+    draw = function(self, x, y)
+      love.graphics.print( "A new issue", x, y)
+    end
   }
 end
 
@@ -298,11 +322,17 @@ function revealNewProblems()
     })
   )
   if factions[1].standing < 3 then
+    local reward = newIssue(
+      "problem", 
+      {newResource("might"),newResource("wealth"),newResource("might")}, 
+      {}, 
+      { newStandingReward(factions[1], -1) }
+    )
     table.insert( issues,
       newIssue("problem", {newResource("might")}, {}, {
-        newScoreReward(-3)
+        newIssueReward(reward)
       })
-    )    
+    )
   end
 end
 
@@ -353,7 +383,7 @@ function cleanFactions()
       faction.standing = 10
     end
     if faction.standing < 1 then
-      score = score - faction.standing - 1
+      score = score + faction.standing - 1
       faction.standing = 1
     end
     if faction.power > 10 then
@@ -361,7 +391,7 @@ function cleanFactions()
       faction.power = 10
     end
     if faction.power < 1 then
-      score = score - faction.power - 1
+      score = score + faction.power - 1
       faction.power = 1
     end    
   end

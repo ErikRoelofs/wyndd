@@ -19,18 +19,18 @@ function love.load()
   selectedResource = {}
   
   factions = {
-    {
-      name = "Derpderp",
-      standing = 5,
-      power = 5
-    },
-    {
-      name = "Narknark",
-      standing = 5,
-      power = 5
-    }    
+    newFaction("derpderp"),
+    newFaction("narknark"),        
   }
     
+end
+
+function newFaction(name)
+  return {
+      name =  name,
+      standing = 5,
+      power = 5,      
+    }
 end
 
 function love.update(dt)  
@@ -188,12 +188,15 @@ end
 function endTheTurn()
   resolveAllIssues()
   returnAllResources()
+  cleanup()
+  
   checkWinLose()
+  
   nextSeason()
   revealNewProblems()
   revealNewOpportunities()
   backToAssignPhase()
-  cleanup()
+  
 end
 
 function resolveAllIssues()
@@ -291,9 +294,16 @@ end
 function revealNewProblems()
   table.insert( issues,
     newIssue("problem", {newResource("might"),newResource("wealth"),newResource("might")}, {}, {
-      newStandingReward(factions[1], 1)
+      newStandingReward(factions[1], -1)
     })
   )
+  if factions[1].standing < 3 then
+    table.insert( issues,
+      newIssue("problem", {newResource("might")}, {}, {
+        newScoreReward(-3)
+      })
+    )    
+  end
 end
 
 function revealNewOpportunities()
@@ -331,7 +341,33 @@ end
 function assignPhase()  
 end
 
-function cleanup()
+function cleanup()  
+  cleanDoneIssues()
+  cleanFactions()
+end
+
+function cleanFactions()
+  for k, faction in ipairs(factions) do
+    if faction.standing > 10 then
+      score = score + faction.standing - 10
+      faction.standing = 10
+    end
+    if faction.standing < 1 then
+      score = score - faction.standing - 1
+      faction.standing = 1
+    end
+    if faction.power > 10 then
+      score = score + faction.power - 10
+      faction.power = 10
+    end
+    if faction.power < 1 then
+      score = score - faction.power - 1
+      faction.power = 1
+    end    
+  end
+end
+
+function cleanDoneIssues()
   local i = #issues
   while i > 0 do
     if issues[i].done then

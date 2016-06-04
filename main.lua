@@ -51,7 +51,7 @@ function love.load()
   
   function standingBasedPotential(faction, standing, rewards)
     return newPotential(
-      newIssue("problem", {newResource("wealth")}, {}, rewards, 1, false), function() return faction.standing > standing end)
+      newIssue("problem", {newWant("wealth")}, {}, rewards, 1, false), function() return faction.standing > standing end)
   end
   local potential = standingBasedPotential(factions[1], 2, {newStandingReward(factions[1], -1)})
     
@@ -170,7 +170,7 @@ end
 
 function revealNewProblems()
   table.insert( issues,
-    newIssue("opportunity", {newResource("wealth")}, {}, {      
+    newIssue("opportunity", {newWant("wealth", true)}, {}, {      
       newGameOverReward()
     }, 1, true)
   )  
@@ -178,7 +178,7 @@ end
 
 function revealNewOpportunities()
   table.insert( issues,
-    newIssue("opportunity", {newResource("might")}, {
+    newIssue("opportunity", {newWant("might")}, {
         newScoreReward(1000)
     },
     {

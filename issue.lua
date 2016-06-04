@@ -27,13 +27,19 @@ function newIssue(issueType, needs, gains, losses, repeats, persistent)
       end
     end,
     metNeeds = function(self)
-      return #self.needs == #self.resources 
+      local met = true
+      for k, need in ipairs(self.needs) do
+        met = met and need.met
+      end
+      return met
     end,
     give = function(self, resource)
       for _, want in ipairs(self.needs) do
         if not want.met and want.type == resource.type then
           want.met = true
-          table.insert(self.resources, resource)
+          if not want.hungry then
+            table.insert(self.resources, resource)
+          end
           return true
         end
       end

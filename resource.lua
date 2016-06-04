@@ -3,3 +3,10 @@ function newResource(type)
     type = type
   }
 end
+
+function newWant(type, hungry)
+  return {
+    type = type,
+    hungry = hungry or false
+  }
+end

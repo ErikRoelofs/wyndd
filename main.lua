@@ -4,7 +4,7 @@
   V persistent issues
   V faction creating issues
   V faction-based issues
-  win/lose condition
+  V win/lose condition
   hungry needs
   multi-resources
   
@@ -13,8 +13,8 @@
   - define some resource types
   - create some factions with assigned decks
   - work on a proper UI, with scrolling probably
-  
-  
+  - create proper graphics
+
 ]]
 if arg[#arg] == "-debug" then debug = true else debug = false end
 if debug then require("mobdebug").start() end
@@ -57,12 +57,20 @@ function love.load()
     
   factions[1]:addPotential(potential)
   
+  gameOver = false
+  
 end
 
 function love.update(dt)  
 end
 
 function love.draw(dt)
+  
+  if gameOver then
+    love.graphics.print("The game has ended. Your score is: " .. score, 300, 300 )
+    return
+  end
+  
   love.graphics.setColor(255,255,255,255)
   love.graphics.print(getSeason(), 20, 20 )
   
@@ -162,8 +170,8 @@ end
 
 function revealNewProblems()
   table.insert( issues,
-    newIssue("opportunity", {newResource("wealth")}, {}, {
-      newFactionReward(newFaction("bargl", {}))
+    newIssue("opportunity", {newResource("wealth")}, {}, {      
+      newGameOverReward()
     }, 1, true)
   )  
 end

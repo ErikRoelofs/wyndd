@@ -71,3 +71,14 @@ function newFactionReward(faction)
       end
   }
 end
+
+function newGameOverReward()
+  return {
+    resolve = function(self)
+      gameOver = true
+    end,
+    draw = function(self,x,y)
+      love.graphics.print("The game ends.", x,y)
+    end
+  }
+end

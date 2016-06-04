@@ -5,6 +5,7 @@
   -- a new competitor
   -- poor planning
   -- theft
+  -- buiding construction
   
 -- opportunities
   -- a new guild

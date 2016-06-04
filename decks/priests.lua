@@ -1,0 +1,6 @@
+-- offerings
+-- feasts
+-- celebrations
+-- good/bad omens
+-- heretics
+-- shischms

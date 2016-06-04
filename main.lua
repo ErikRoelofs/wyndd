@@ -5,16 +5,16 @@
   V faction creating issues
   V faction-based issues
   V win/lose condition
-  hungry needs
-  multi-resources
+  V hungry needs
   
+  - multi-resources
   - allow viewing of complex types
   - build some issue decks
   - define some resource types
   - create some factions with assigned decks
   - work on a proper UI, with scrolling probably
   - create proper graphics
-
+  - underlying issues that create story?
 ]]
 if arg[#arg] == "-debug" then debug = true else debug = false end
 if debug then require("mobdebug").start() end

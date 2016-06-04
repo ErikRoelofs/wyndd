@@ -3,7 +3,10 @@
 -- generic
     -- travelling merchants
     -- introductions of new factions
-
+    -- laws and regulations
+    -- crimes and punishment
+    -- basic fears (raiding, the unknown, etc)
+    
 -- spring
   -- problems
   

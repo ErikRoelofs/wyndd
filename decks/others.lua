@@ -1,0 +1,10 @@
+-- raiding and war
+-- trade opportunities (resource to resource)
+-- trespassing
+-- espionage
+-- competition
+-- cooperation and alliances
+-- insurgants
+-- immigrants/emigrants
+-- defectors and fleeing criminals
+-- border disputes

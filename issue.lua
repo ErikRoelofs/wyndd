@@ -54,15 +54,15 @@ function newIssue(issueType, needs, gains, losses, repeats, persistent)
   }
 end
 
-function newPotential(issue, validator)
+function newPotential(issueFunction, validator)
   return {
-    issue = issue,
+    issueFunction = issueFunction,
     validator = validator,
     isValid = function(self)
       return self:validator()
     end,
     getIssue = function(self)
-      return self.issue
+      return self.issueFunction()
     end    
   }
 end

@@ -11,7 +11,7 @@ function newFaction(name, potentials)
         local maybeIssue = self.issueFactory:getValidIssue()
         if maybeIssue then
           table.insert(issues, maybeIssue)
-        end        
+        end
       end
     }
 end

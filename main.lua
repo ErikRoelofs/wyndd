@@ -3,10 +3,18 @@
   V multi-turn issues
   V persistent issues
   V faction creating issues
-  faction-based issues
+  V faction-based issues
   win/lose condition
   hungry needs
   multi-resources
+  
+  - allow viewing of complex types
+  - build some issue decks
+  - define some resource types
+  - create some factions with assigned decks
+  - work on a proper UI, with scrolling probably
+  
+  
 ]]
 if arg[#arg] == "-debug" then debug = true else debug = false end
 if debug then require("mobdebug").start() end
@@ -153,13 +161,6 @@ function revealNewIssues()
 end
 
 function revealNewProblems()
-  --[[
-  table.insert( issues,
-    newIssue("problem", {newResource("wealth")}, {}, {
-      newStandingReward(factions[1], -1)
-    }, 1, true)
-  )
-  ]]--
   table.insert( issues,
     newIssue("opportunity", {newResource("wealth")}, {}, {
       newFactionReward(newFaction("bargl", {}))

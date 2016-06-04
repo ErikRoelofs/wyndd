@@ -75,7 +75,11 @@ function drawResource(resource, x, y)
   elseif resource.type == "might" then
     love.graphics.setColor(100,100,100,255)
   end
-  love.graphics.rectangle("fill", x, y, 15,15)
+  if resource.consumable then
+    love.graphics.circle("fill", x  + 7.5, y + 7.5, 7.5)
+  else
+    love.graphics.rectangle("fill", x, y, 15,15)
+  end
 end
 
 function drawGain(gain, x, y)

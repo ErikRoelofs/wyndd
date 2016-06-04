@@ -1,6 +1,7 @@
-function newResource(type)
+function newResource(type, consumable)
   return {
-    type = type
+    type = type,
+    consumable = consumable or false
   }
 end
 

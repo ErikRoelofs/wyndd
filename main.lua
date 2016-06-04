@@ -33,7 +33,7 @@ function love.load()
   resources = {
     newResource("wealth"),
     newResource("wealth"),
-    newResource("wealth"),
+    newResource("wealth", true),
     newResource("might"),
     newResource("might"),
     newResource("might"),    
@@ -51,7 +51,7 @@ function love.load()
   
   function standingBasedPotential(faction, standing, rewards)
     return newPotential(
-      newIssue("problem", {newWant("wealth")}, {}, rewards, 1, false), function() return faction.standing > standing end)
+      newIssue("problem", {newWant("wealth")}, {}, rewards), function() return faction.standing > standing end)
   end
   local potential = standingBasedPotential(factions[1], 2, {newStandingReward(factions[1], -1)})
     

@@ -47,3 +47,38 @@ function newIssue(issueType, needs, gains, losses, repeats, persistent)
     end
   }
 end
+
+function newPotential(issue, validator)
+  return {
+    issue = issue,
+    validator = validator,
+    isValid = function(self)
+      return self:validator()
+    end,
+    getIssue = function(self)
+      return self.issue
+    end    
+  }
+end
+
+function issueFactory(potentials)
+  return {
+    potentials = potentials,
+    getValidIssue = function(self)
+      local toPickFrom = {}
+      for k, potential in ipairs(self.potentials) do
+        if potential:isValid() then
+          table.insert(toPickFrom, potential)
+        end        
+      end
+      if #toPickFrom == 0 then
+        return
+      end
+      local num = math.random(1, #toPickFrom)
+      return toPickFrom[num]:getIssue()
+    end,
+    addPotential = function(self, potential)
+      table.insert(self.potentials, potential)
+    end,
+  }
+end

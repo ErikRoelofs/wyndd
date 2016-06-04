@@ -59,3 +59,15 @@ function newIssueReward(issue)
     end
   }
 end
+
+function newFactionReward(faction)
+  return {
+      faction = faction,
+      resolve = function(self)
+        table.insert(factions, self.faction)
+      end,
+      draw = function(self,x,y)
+        love.graphics.print("A new faction", x, y)
+      end
+  }
+end

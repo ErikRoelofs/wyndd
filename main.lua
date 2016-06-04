@@ -1,7 +1,8 @@
 --[[
-  chained issues
-  multi-turn issues
-  persistent issues
+  V chained issues
+  V multi-turn issues
+  V persistent issues
+  V faction creating issues
   faction-based issues
   win/lose condition
   hungry needs
@@ -33,11 +34,21 @@ function love.load()
   mouse = { x = 0, y = 0 }
   selectedResource = {}
   
+  factions = {}
+  
   factions = {
-    newFaction("derpderp"),
-    newFaction("narknark"),        
+    newFaction("derpderp", {}),
+    newFaction("narknark", {}),        
   }
+  
+  function standingBasedPotential(faction, standing, rewards)
+    return newPotential(
+      newIssue("problem", {newResource("wealth")}, {}, rewards, 1, false), function() return faction.standing > standing end)
+  end
+  local potential = standingBasedPotential(factions[1], 2, {newStandingReward(factions[1], -1)})
     
+  factions[1]:addPotential(potential)
+  
 end
 
 function love.update(dt)  
@@ -114,8 +125,7 @@ function endTheTurn()
   checkWinLose()
   
   nextSeason()
-  revealNewProblems()
-  revealNewOpportunities()
+  revealNewIssues()
   backToAssignPhase()
   
 end
@@ -132,25 +142,29 @@ function resolveAllIssues()
   
 end
 
+function revealNewIssues()
+  revealNewProblems()
+  revealNewOpportunities()
+  
+  for k, faction in ipairs(factions) do
+    faction:revealNewIssues()
+  end
+  
+end
+
 function revealNewProblems()
+  --[[
   table.insert( issues,
     newIssue("problem", {newResource("wealth")}, {}, {
       newStandingReward(factions[1], -1)
     }, 1, true)
   )
-  if factions[1].standing < 3 then
-    local reward = newIssue(
-      "problem", 
-      {newResource("might"),newResource("wealth"),newResource("might")}, 
-      {}, 
-      { newStandingReward(factions[1], -1) }
-    )
-    table.insert( issues,
-      newIssue("problem", {newResource("might")}, {}, {
-        newIssueReward(reward)
-      })
-    )
-  end
+  ]]--
+  table.insert( issues,
+    newIssue("opportunity", {newResource("wealth")}, {}, {
+      newFactionReward(newFaction("bargl", {}))
+    }, 1, true)
+  )  
 end
 
 function revealNewOpportunities()

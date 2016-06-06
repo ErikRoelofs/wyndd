@@ -38,10 +38,21 @@ function drawIssue(issue, x, y)
     end
     love.graphics.rectangle("fill", x+3,y+3, 5, 5)
     
+    local timeInfo = ''
+    
     if issue.repeats > 1 then
-      love.graphics.setColor(255,255,255,255)
-      love.graphics.print(issue.repeats .. "x", x, y+135)
+      timeInfo = timeInfo .. "r: " .. issue.repeats .. "x"
     end
+    if issue.repeats > 1 and issue.delayed > 1 then
+      timeInfo = timeInfo .. " / "
+    end
+    if issue.delayed > 1 then
+      timeInfo = timeInfo .. "d: " .. issue.delayed .. "x"
+    end
+  
+    love.graphics.setColor(255,255,255,255)
+    love.graphics.print(timeInfo, x, y+135)
+
 end
 
 function drawNeed(need, x, y)

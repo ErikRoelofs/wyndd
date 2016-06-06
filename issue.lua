@@ -1,10 +1,11 @@
-function newIssue(issueType, needs, gains, losses, repeats, persistent)
+function newIssue(issueType, needs, gains, losses, repeats, persistent, delayed)
   return {
     type = issueType,
     needs = needs,
     gains = gains,
     losses = losses,
     repeats = repeats or 1,
+    delayed = delayed or 1,
     persistent = persistent or false,
     resources = {},
     resolve = function(self)
@@ -17,11 +18,16 @@ function newIssue(issueType, needs, gains, losses, repeats, persistent)
             gain:resolve()
           end
         end
-      else        
-        for k, loss in ipairs(self.losses) do
-          loss:resolve()
-          if self.persistent then
-            self:clean()
+      else
+        if self.delayed > 1 then
+          self.delayed = self.delayed - 1
+          self:clean()
+        else
+          for k, loss in ipairs(self.losses) do
+            loss:resolve()
+            if self.persistent then
+              self:clean()
+            end
           end
         end
       end

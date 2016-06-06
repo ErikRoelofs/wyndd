@@ -6,7 +6,8 @@
   V faction-based issues
   V win/lose condition
   V hungry needs
-  
+  V delayed resolve issues
+    
   - multi-resources
   - allow viewing of complex types
   - build some issue decks
@@ -187,7 +188,7 @@ function revealNewOpportunities()
     },
     {
         newScoreReward(-5)
-    }, 3)
+    }, 3, false, 3)
   )  
 end
 

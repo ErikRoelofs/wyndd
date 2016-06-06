@@ -48,8 +48,8 @@ function love.load()
   factions = {}
   
   factions = {
-    newFaction("derpderp", {}),
-    newFaction("narknark", {}),        
+    newFaction("derp", "derpderp", 8, 2, {}),
+    newFaction("nark", "narknark", 2, 8, {}),        
   }
   
   function standingBasedPotential(faction, standing, rewards)

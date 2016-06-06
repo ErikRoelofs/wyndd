@@ -1,8 +1,9 @@
-function newFaction(name, potentials)  
+function newFaction(id, name, standing, power, potentials)  
   return {
+      identifier = id,
       name =  name,
-      standing = 5,
-      power = 5,
+      standing = standing,
+      power = power,
       issueFactory = issueFactory(potentials),
       addPotential = function(self, potential)
         self.issueFactory:addPotential(potential)

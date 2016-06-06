@@ -58,3 +58,5 @@ local potentials = {
   
   
 }
+
+return potentials

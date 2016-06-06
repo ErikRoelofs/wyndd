@@ -26,7 +26,8 @@ local potentials = {
       losses = {{"score", -5}, {"issue", "peasant_riot_2"},
       delayed = 3,
     }
-    validator = { "arithmetic", "peasants", "standing", 3, "<" }
+    validator = { "arithmetic", "peasants", "standing", 3, "<" },
+    faction = "peasants"
   },
   {
     identifier = "peasant_riot_2",
@@ -38,7 +39,8 @@ local potentials = {
       losses = {{"score", -10}, {"issue", "peasant_riot_3"},
       delayed = 3,
     },
-    validator = { "never" }
+    validator = { "never" },
+    faction = "peasants"
   },
   {
     identifier = "peasant_riot_3",
@@ -50,13 +52,10 @@ local potentials = {
       losses = {{"game_end"}},
       delayed = 3,
     },
-    validator = { "never" }
+    validator = { "never" },
+    faction = "peasants"
   }
 
-  
-  
-  
-  
 }
 
 return potentials

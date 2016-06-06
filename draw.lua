@@ -29,7 +29,7 @@ function drawIssue(issue, x, y)
   
     love.graphics.setColor(255,255,255,255)
     love.graphics.rectangle("fill", x+2,y+2, 7, 7)
-    love.graphics.print(issue.type, x + 15, y + 2 )
+    love.graphics.print(issue.name, x + 15, y + 2 )
     
     if issue:metNeeds() then
       love.graphics.setColor(0,255,0,255)

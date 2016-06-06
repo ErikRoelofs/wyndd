@@ -8,14 +8,16 @@
   V hungry needs
   V delayed resolve issues
     
-  - multi-resources
-  - allow viewing of complex types
   - build some issue decks
   - define some resource types
+  - multi-resources
+  - allow viewing of complex types
   - create some factions with assigned decks
   - work on a proper UI, with scrolling probably
   - create proper graphics
   - underlying issues that create story?
+  - multi-faction related issues
+  - collect potential cards in hand (edicts and laws and stuff)
 ]]
 if arg[#arg] == "-debug" then debug = true else debug = false end
 if debug then require("mobdebug").start() end
@@ -53,7 +55,7 @@ function love.load()
   function standingBasedPotential(faction, standing, rewards)
     return newPotential(
       function() 
-        return newIssue("problem", {newWant("wealth")}, {}, rewards)
+        return newIssue("problem", "some prob", {newWant("wealth")}, {}, rewards)
       end,
       function() return faction.standing > standing end
     )
@@ -175,7 +177,7 @@ end
 
 function revealNewProblems()
   table.insert( issues,
-    newIssue("opportunity", {newWant("wealth", true)}, {}, {      
+    newIssue("opportunity", "some opp", {newWant("wealth", true)}, {}, {      
       newGameOverReward()
     }, 1, true)
   )  
@@ -183,7 +185,7 @@ end
 
 function revealNewOpportunities()
   table.insert( issues,
-    newIssue("opportunity", {newWant("might")}, {
+    newIssue("opportunity", "some opp", {newWant("might")}, {
         newScoreReward(1000)
     },
     {

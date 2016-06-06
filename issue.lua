@@ -1,6 +1,7 @@
-function newIssue(issueType, needs, gains, losses, repeats, persistent, delayed)
+function newIssue(issueType, name, needs, gains, losses, repeats, persistent, delayed)
   return {
     type = issueType,
+    name = name,
     needs = needs,
     gains = gains,
     losses = losses,
@@ -93,4 +94,33 @@ function issueFactory(potentials)
       table.insert(self.potentials, potential)
     end,
   }
+end
+
+function neverValidator()
+  return false
+end
+
+function alwaysValidator()
+  return true
+end
+
+function arithmeticValidator(table, field, value, operator)
+  return function()
+    if operator == "<" then
+      return table[field] < value
+    elseif operator == "<=" then
+      return table[field] <= value
+    elseif operator == "==" then
+      return table[field] == value
+    elseif operator == ">=" then
+      return table[field] >= value
+    elseif operator == ">" then
+      return table[field] > value
+    end
+    error("Unknown operator: " .. operator)
+  end  
+end
+
+function standingValidator(faction, standing, operator)
+  return arithmeticValidator(faction, "standing", standing, operator)
 end

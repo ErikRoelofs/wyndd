@@ -48,11 +48,11 @@ function newPowerReward(faction, value)
   }
 end
 
-function newIssueReward(issue)
+function newIssueReward(issueFunction)
   return {
-    issue = issue,    
+    issueFunction = issueFunction,    
     resolve = function(self) 
-      table.insert(issues, self.issue)
+      table.insert(issues, self.issueFunction())
     end,
     draw = function(self, x, y)
       love.graphics.print( "A new issue", x, y)
@@ -99,7 +99,7 @@ function buildRewardFromTable(table)
   elseif table[1] == "power" then
     return newPowerReward(findFactionByIdentifier(table[2]), table[3])
   elseif table[1] == "issue" then
-    return newIssueReward(true)
+    return newIssueReward(findIssueFunctionByIdentifier(table[2]))
   else
     error("Unknown type of reward: " .. table[1])
   end

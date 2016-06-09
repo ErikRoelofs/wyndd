@@ -1,3 +1,5 @@
+issueList = {}
+
 function newIssue(issueType, name, needs, gains, losses, repeats, persistent, delayed)
   return {
     type = issueType,
@@ -124,6 +126,7 @@ end
 function buildPotentialFromTable(table)
   local validator = buildValidatorFromTable(table.validator)
   local issueFunction = buildIssueFunctionFromTable(table.issue)
+  issueList[table.identifier] = issueFunction
   return newPotential(issueFunction, validator)
 end
 
@@ -147,4 +150,11 @@ function buildValidatorFromTable(validator)
   else
     error("Unknown validator type: " .. validator[1])
   end
+end
+
+function findIssueFunctionByIdentifier(identifier)
+  if issueList[identifier] then
+    return issueList[identifier]
+  end
+  error("No such issue: " .. identifier)
 end

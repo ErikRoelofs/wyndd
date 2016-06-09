@@ -16,3 +16,7 @@ function newFaction(id, name, standing, power, potentials)
       end
     }
 end
+
+function buildFactionFromTable(table)
+  return newFaction(table.identifier, table.name, table.standing or 5, table.power or 5, {})
+end

@@ -47,22 +47,27 @@ function love.load()
   
   factions = {}
   
-  factions = {
-    newFaction("derp", "derpderp", 8, 2, {}),
-    newFaction("nark", "narknark", 2, 8, {}),        
-  }
-  
-  function standingBasedPotential(faction, standing, rewards)
-    return newPotential(
-      function() 
-        return newIssue("problem", "some prob", {newWant("wealth")}, {}, rewards)
-      end,
-      function() return faction.standing > standing end
-    )
+  local factionData = require "factions/factions"
+  for k, factionToMake in ipairs(factionData) do
+    table.insert( factions, buildFactionFromTable(factionToMake) )
   end
-  local potential = standingBasedPotential(factions[1], 2, {newStandingReward(factions[1], -1)})
-    
-  factions[1]:addPotential(potential)
+  
+
+  function findFactionByIdentifier(id)
+    for k, v in ipairs(factions) do
+      if v.identifier == id then
+        return v
+      end
+    end
+    error("Could not find faction: " .. id)
+  end
+  
+  local potentialData = require "decks/peasants"
+  for k, potentialToMake in ipairs(potentialData) do
+    local potential = buildPotentialFromTable(potentialToMake)    
+    findFactionByIdentifier(potentialToMake.faction):addPotential(potential)
+  end
+
   
   gameOver = false
   
@@ -176,22 +181,11 @@ function revealNewIssues()
 end
 
 function revealNewProblems()
-  table.insert( issues,
-    newIssue("opportunity", "some opp", {newWant("wealth", true)}, {}, {      
-      newGameOverReward()
-    }, 1, true)
-  )  
+
 end
 
 function revealNewOpportunities()
-  table.insert( issues,
-    newIssue("opportunity", "some opp", {newWant("might")}, {
-        newScoreReward(1000)
-    },
-    {
-        newScoreReward(-5)
-    }, 3, false, 3)
-  )  
+
 end
 
 function returnAllResources()

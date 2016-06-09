@@ -121,6 +121,30 @@ function arithmeticValidator(table, field, value, operator)
   end  
 end
 
-function standingValidator(faction, standing, operator)
-  return arithmeticValidator(faction, "standing", standing, operator)
+function buildPotentialFromTable(table)
+  local validator = buildValidatorFromTable(table.validator)
+  local issueFunction = buildIssueFunctionFromTable(table.issue)
+  return newPotential(issueFunction, validator)
+end
+
+function buildIssueFunctionFromTable(table)  
+    local needs = buildNeedsFromTable(table.needs)
+    local gains = buildRewardsFromTable(table.gains)
+    local losses = buildRewardsFromTable(table.losses)
+    
+    return function()
+      return newIssue(table.type, table.name, needs, gains, losses, table.repeats, table.persistent, table.delayed)
+    end
+end
+
+function buildValidatorFromTable(validator)
+  if validator[1] == "never" then
+    return neverValidator
+  elseif validator[1] == "always" then
+    return alwaysValidator
+  elseif validator[1] == "arithmetic" then
+    return arithmeticValidator(findFactionByIdentifier(validator[2]), validator[3], validator[4], validator[5])
+  else
+    error("Unknown validator type: " .. validator[1])
+  end
 end

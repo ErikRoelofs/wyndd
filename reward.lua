@@ -82,3 +82,25 @@ function newGameOverReward()
     end
   }
 end
+
+function buildRewardsFromTable(t)
+  local rewards = {}
+  for _, reward in ipairs(t) do
+    table.insert(rewards, buildRewardFromTable(reward))
+  end
+  return rewards
+end
+
+function buildRewardFromTable(table)
+  if table[1] == "score" then
+    return newScoreReward(table[2])
+  elseif table[1] == "game_end" then
+    return newGameOverReward()
+  elseif table[1] == "power" then
+    return newPowerReward(findFactionByIdentifier(table[2]), table[3])
+  elseif table[1] == "issue" then
+    return newIssueReward(true)
+  else
+    error("Unknown type of reward: " .. table[1])
+  end
+end

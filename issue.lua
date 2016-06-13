@@ -1,6 +1,10 @@
 issueList = {}
 
-function newIssue(issueType, name, needs, gains, losses, repeats, persistent, delayed)
+function newIssue(issueType, name, needs, gains, losses, repeats, persistent, delayed)  
+  needs = simplecopy(needs)
+  gains = simplecopy(gains)
+  losses = simplecopy(losses)
+  
   return {
     type = issueType,
     name = name,
@@ -123,6 +127,12 @@ function arithmeticValidator(table, field, value, operator)
   end  
 end
 
+function seasonalValidator(season)
+  return function()
+    return getSeason() == season
+  end
+end
+
 function buildPotentialFromTable(table)
   local validator = buildValidatorFromTable(table.validator)
   local issueFunction = buildIssueFunctionFromTable(table.issue)
@@ -131,6 +141,7 @@ function buildPotentialFromTable(table)
 end
 
 function buildIssueFunctionFromTable(table)  
+    -- all of these need to be disjoined upon calling the function
     local needs = buildNeedsFromTable(table.needs)
     local gains = buildRewardsFromTable(table.gains)
     local losses = buildRewardsFromTable(table.losses)
@@ -147,6 +158,8 @@ function buildValidatorFromTable(validator)
     return alwaysValidator
   elseif validator[1] == "arithmetic" then
     return arithmeticValidator(findFactionByIdentifier(validator[2]), validator[3], validator[4], validator[5])
+  elseif validator[1] == "seasonal" then
+    return seasonalValidator(validator[2])
   else
     error("Unknown validator type: " .. validator[1])
   end

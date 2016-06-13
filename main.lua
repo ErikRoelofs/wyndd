@@ -248,3 +248,15 @@ function cleanDoneIssues()
     i = i - 1
   end
 end
+
+function simplecopy(t)
+  local new = {}
+  for key, value in pairs(t) do
+    if type(value) == "table" then
+      new[key] = simplecopy(value)
+    else
+      new[key] = value
+    end
+  end
+  return new
+end

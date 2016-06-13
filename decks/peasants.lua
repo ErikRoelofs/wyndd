@@ -55,7 +55,18 @@ local potentials = {
     validator = { "arithmetic", "peasants", "standing", 8, "<" },
     faction = "peasants"
   },
-
+  {
+    identifier = "peasant_hunger",
+    issue = {
+      type = "problem",
+      name = "Famine",
+      needs = { {"food"} },
+      gains = {{"standing", "peasants", 1}},
+      losses = {{"power", "peasants", -1}}
+    },
+    validator = { "seasonal", "winter" },
+    faction = "peasants"
+  }
 }
 
 return potentials

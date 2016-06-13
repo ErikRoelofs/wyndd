@@ -8,12 +8,13 @@
   V hungry needs
   V delayed resolve issues
     
+  - create some factions with assigned decks
   - build some issue decks
   - define some resource types
+  - work on a proper UI, with scrolling probably < using renderer
+  
   - multi-resources
   - allow viewing of complex types
-  - create some factions with assigned decks
-  - work on a proper UI, with scrolling probably
   - create proper graphics
   - underlying issues that create story?
   - multi-faction related issues
@@ -30,8 +31,10 @@ require "faction"
 require "validation"
 
 function love.load()
+  
   currentSeason = 1
   seasons = { "spring", "summer", "autumn", "winter" }
+  year = 0
   
   issues = {}
   resources = {
@@ -91,11 +94,11 @@ function love.draw(dt)
   end
   
   love.graphics.setColor(255,255,255,255)
-  love.graphics.print(getSeason(), 20, 20 )
+  love.graphics.print(getSeason() .. ", year " .. year, 20, 20 )
   
-  love.graphics.print("score: " .. score ,100, 20 )
+  love.graphics.print("score: " .. score ,150, 20 )
   
-  love.graphics.print("mouse: " .. mouse.x .. "," .. mouse.y,170, 20 )
+  love.graphics.print("mouse: " .. mouse.x .. "," .. mouse.y,220, 20 )
   
   for k, issue in ipairs(issues) do
     drawIssue(issue, k * 160 - 150, 40)    
@@ -144,10 +147,16 @@ function getSeason()
   return seasons[currentSeason]
 end
 
+function getYear()
+  return year
+end
+
+
 function nextSeason()
   if currentSeason < #seasons then
     currentSeason = currentSeason + 1
   else
+    year = year + 1
     currentSeason = 1
   end
 end

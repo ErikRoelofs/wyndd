@@ -6,6 +6,10 @@ function alwaysValidator()
   return true
 end
 
+function rareValidator()
+  return math.random(1,4) == 1
+end
+
 function arithmeticValidator(table, field, value, operator)
   return function()
     if operator == "<" then
@@ -34,6 +38,8 @@ function buildValidatorFromTable(validator)
     return neverValidator
   elseif validator[1] == "always" then
     return alwaysValidator
+  elseif validator[1] == "rare" then
+    return rareValidator
   elseif validator[1] == "arithmetic" then
     return arithmeticValidator(findFactionByIdentifier(validator[2]), validator[3], validator[4], validator[5])
   elseif validator[1] == "seasonal" then

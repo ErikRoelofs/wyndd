@@ -12,9 +12,10 @@
   -- bountiful harvest
   -- draft
   -- taxation
-
---function newIssue(issueType, needs, gains, losses, repeats, persistent, delayed)
-
+  -- land expansion
+  -- structures (mills, food production, granaries, etc)
+  -- new crops
+  
 local potentials = {
   {
     identifier = "peasant_riot_3",
@@ -114,7 +115,60 @@ local potentials = {
     },
     validator = { "arithmetic", "peasants", "power", 3, ">" },
     faction = "peasants"
-  },  
+  }, 
+  {
+    identifier = "peasant_expand_land",
+    issue = {
+      type = "opportunity",
+      name = "Expand farmlands",
+      needs = { {"might"}, {"wealth"} },
+      gains = {{"power", "peasants", 1}, {"score", 5}},
+      losses = {}
+    },
+    validator = { "rare" },
+    faction = "peasants"
+  },
+  {
+    identifier = "peasant_taxation",
+    issue = {
+      type = "opportunity",
+      name = "Hefty taxation",
+      needs = { {"might"}, {"might"} },
+      gains = {{"standing", "peasants", -2}, {"resource", "wealth"}},
+      losses = {}
+    },
+    validator = { "always" },
+    faction = "peasants"
+  },
+  {
+    identifier = "peasant_build_mill",
+    issue = {
+      type = "opportunity",
+      name = "Build a Mill",
+      needs = { {"wealth"}, {"wealth"} },
+      gains = {{"standing", "peasants", 1}, {"resource", "food"}},
+      losses = {},
+      repeats = 3,
+      delayed = 3,
+    },
+    validator = { "always" },
+    faction = "peasants"
+  },
+ {
+    identifier = "peasant_bandits",
+    issue = {
+      type = "problem",
+      name = "Bandit activity",
+      needs = { {"might"}, {"might"} },
+      gains = {{"standing", "peasants", 1}, {"score", 10}},
+      losses = {{"score", -5}, {"standing", "peasants", -1}},
+      persistent = true,
+      repeats = 2
+    },
+    validator = { "always" },
+    faction = "peasants"
+  },
+    
 }
 
 return potentials

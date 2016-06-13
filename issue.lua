@@ -109,8 +109,7 @@ function buildPotentialFromTable(table)
   return newPotential(issueFunction, validator)
 end
 
-function buildIssueFunctionFromTable(table)  
-    -- all of these need to be disjoined upon calling the function
+function buildIssueFunctionFromTable(table)      
     local needs = buildNeedsFromTable(table.needs)
     local gains = buildRewardsFromTable(table.gains)
     local losses = buildRewardsFromTable(table.losses)

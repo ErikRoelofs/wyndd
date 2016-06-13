@@ -102,6 +102,8 @@ function buildRewardFromTable(table)
     return newStandingReward(findFactionByIdentifier(table[2]), table[3])
   elseif table[1] == "issue" then
     return newIssueReward(findIssueFunctionByIdentifier(table[2]))
+  elseif table[1] == "resource" then
+    return newResourceReward(newResource(table[2], table[3]))
   else
     error("Unknown type of reward: " .. table[1])
   end

@@ -60,6 +60,8 @@ function drawNeed(need, x, y)
     love.graphics.setColor(0,200,150,255)
   elseif need.type == "might" then
     love.graphics.setColor(100,100,100,255)
+  elseif need.type == "food" then
+    love.graphics.setColor(0,200,0,255)
   end
   love.graphics.rectangle("fill", x, y, 15,15)
   
@@ -85,6 +87,8 @@ function drawResource(resource, x, y)
     love.graphics.setColor(0,200,150,255)
   elseif resource.type == "might" then
     love.graphics.setColor(100,100,100,255)
+  elseif resource.type == "food" then
+    love.graphics.setColor(0,200,0,255)
   end
   if resource.consumable then
     love.graphics.circle("fill", x  + 7.5, y + 7.5, 7.5)

@@ -27,6 +27,7 @@ require "resource"
 require "reward"
 require "issue"
 require "faction"
+require "validation"
 
 function love.load()
   currentSeason = 1

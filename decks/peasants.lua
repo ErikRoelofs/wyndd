@@ -66,6 +66,18 @@ local potentials = {
     },
     validator = { "seasonal", "winter" },
     faction = "peasants"
+  },
+  {
+    identifier = "peasant_good_harvest",
+    issue = {
+      type = "opportunity",
+      name = "Bountiful Harvest",
+      needs = { {"might"} },
+      gains = {{"resource", "food", true}},
+      losses = {{"standing", "peasants", 1}}
+    },
+    validator = { "seasonal", "autumn" },
+    faction = "peasants"
   }
 }
 

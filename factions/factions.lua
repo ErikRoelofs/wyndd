@@ -25,9 +25,12 @@ local factions = {
       standing = 5,
       power = 5,      
     },
-  
-  
-  
+    {
+      identifier = "priests",
+      name = "Priests",
+      standing = 5,
+      power = 5
+    }
 }
 
 return factions

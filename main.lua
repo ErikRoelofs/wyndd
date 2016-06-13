@@ -41,6 +41,7 @@ function love.load()
     newResource("might"),
     newResource("might"),
     newResource("might"),    
+    newResource("faith"),    
   }
   score = 0
   mouse = { x = 0, y = 0 }
@@ -65,6 +66,7 @@ function love.load()
   
   convert( require "decks/peasants" )
   convert( require "decks/guilds" )
+  convert( require "decks/priests" )
 
   
   gameOver = false

@@ -24,7 +24,7 @@ local potentials = {
       losses = {{"score", -5}},
       delayed = 2,
     },
-    validator = { "always" },
+    validator = { "arithmetic", "guilds", "standing", 5, "<" },
     faction = "guilds"
   }, 
   {
@@ -32,11 +32,36 @@ local potentials = {
     issue = {
       type = "problem",
       name = "Material shortages",
-      needs = { {"wealth", "wealth"}},
+      needs = { {"wealth"}, {"wealth"}},
       gains = {{"score", 10}},
       losses = {{"power", "guilds", -1}},      
     },
     validator = { "always" },
+    faction = "guilds"
+  },   
+  {
+    identifier = "guilds_conduct_trade",
+    issue = {
+      type = "opportunity",
+      name = "Trade mission",
+      needs = { {"wealth"}},
+      gains = {{"score", 3}},
+      losses = {},
+    },
+    validator = { "arithmetic", "guilds", "power", 3, ">" },
+    faction = "guilds"
+  },   
+  {
+    identifier = "guilds_new_technology",
+    issue = {
+      type = "opportunity",
+      name = "New technology",
+      needs = { {"wealth"},{"wealth"},{"wealth"}},
+      gains = {{"power", "guilds", 2}},
+      losses = {{"power", "guilds", -1}},      
+      delayed = 2,
+    },
+    validator = { "rare" },
     faction = "guilds"
   },   
   {

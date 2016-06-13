@@ -52,7 +52,7 @@ local potentials = {
       losses = {{"score", -5}, {"issue", "peasant_riot_2"}},
       delayed = 3,
     },
-    validator = { "arithmetic", "peasants", "standing", 8, "<" },
+    validator = { "arithmetic", "peasants", "standing", 5, "<" },
     faction = "peasants"
   },
   {
@@ -78,7 +78,43 @@ local potentials = {
     },
     validator = { "seasonal", "autumn" },
     faction = "peasants"
-  }
+  },
+  {
+    identifier = "peasant_festivities",
+    issue = {
+      type = "opportunity",
+      name = "Summer Festivities",
+      needs = { {"wealth"} },
+      gains = {{"power", "peasants", 1}},
+      losses = {}
+    },
+    validator = { "seasonal", "summer" },
+    faction = "peasants"
+  },  
+  {
+    identifier = "peasant_militia",
+    issue = {
+      type = "opportunity",
+      name = "Raise Militia",
+      needs = { {"wealth"} },
+      gains = {{"power", "peasants", -1}, {"resource", "might"}},
+      losses = {}
+    },
+    validator = { "arithmetic", "peasants", "power", 5, ">" },
+    faction = "peasants"
+  },
+  {
+    identifier = "peasant_draft",
+    issue = {
+      type = "opportunity",
+      name = "Draft soldiers",
+      needs = { {"might"}, {"might"} },
+      gains = {{"power", "peasants", -1}, {"standing", "peasants", -1}, {"resource", "might"}},
+      losses = {}
+    },
+    validator = { "arithmetic", "peasants", "power", 3, ">" },
+    faction = "peasants"
+  },  
 }
 
 return potentials

@@ -19,6 +19,12 @@ local factions = {
       standing = 5,
       power = 5,      
     },
+    {
+      identifier = "guilds",
+      name = "Guilds",
+      standing = 5,
+      power = 5,      
+    },
   
   
   

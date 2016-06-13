@@ -63,15 +63,19 @@ function love.load()
     error("Could not find faction: " .. id)
   end
   
-  local potentialData = require "decks/peasants"
-  for k, potentialToMake in ipairs(potentialData) do
-    local potential = buildPotentialFromTable(potentialToMake)    
-    findFactionByIdentifier(potentialToMake.faction):addPotential(potential)
-  end
+  convert( require "decks/peasants" )
+  convert( require "decks/guilds" )
 
   
   gameOver = false
   
+end
+
+function convert(potentialData)
+  for k, potentialToMake in ipairs(potentialData) do
+    local potential = buildPotentialFromTable(potentialToMake)    
+    findFactionByIdentifier(potentialToMake.faction):addPotential(potential)
+  end
 end
 
 function love.update(dt)  

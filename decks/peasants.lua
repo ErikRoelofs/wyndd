@@ -13,8 +13,9 @@
   -- draft
   -- taxation
   -- land expansion
-  -- structures (mills, food production, granaries, etc)
+  -- structures (mills, bakeries, granaries, etc)
   -- new crops
+  -- animal related
   
 local potentials = {
   {
@@ -150,6 +151,19 @@ local potentials = {
       losses = {},
       repeats = 3,
       delayed = 3,
+    },
+    validator = { "always" },
+    faction = "peasants"
+  },
+  {
+    identifier = "peasant_build_barn",
+    issue = {
+      type = "opportunity",
+      name = "Raise a Barn",
+      needs = { {"wealth"} },
+      gains = {{"score", 3}},
+      losses = {},
+      repeats = 2,      
     },
     validator = { "always" },
     faction = "peasants"

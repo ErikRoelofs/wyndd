@@ -7,6 +7,66 @@ function drawFaction(faction, x, y)
   
 end
 
+function makeViewForIssue(issue)
+    
+  local bgColor = {}
+  if issue.type == "problem" then
+    bgColor = {150,0,0,255}
+  elseif issue.type == "opportunity" then
+    bgColor = {0,150,0,255}
+  end
+  
+  local view = lc:build("linear", {height="wrap", width="wrap", direction="v", backgroundColor = bgColor})
+  
+  view:addChild(lc:build("text", {height="wrap", width="wrap", data = { value = issue.name }, padding = lc.padding(5) }))
+  
+  local needsView = lc:build("linear", {height="wrap", width="fill", direction="h"})  
+  for k, need in ipairs(issue.needs) do
+    needsView:addChild(makeViewForNeed(need))
+  end
+  view:addChild(needsView)
+  
+  local gainsView = lc:build("linear", {height="wrap", width="fill", direction="h"})  
+  for k, gain in ipairs(issue.gains ) do
+    --gainsView:addChild(gain:getView())
+  end
+  view:addChild(gainsView)
+  
+  local lossesView = lc:build("linear", {height="wrap", width="fill", direction="h"})  
+  for k, loss in ipairs(issue.losses ) do
+    --lossesView:addChild(loss:getView())
+  end
+  view:addChild(lossesView)
+  
+  
+  return view
+end
+
+function makeViewForNeed(need)
+  
+  local bgColor = {}
+  if need.type == "wealth" then
+    bgColor = {0,200,150,255}
+  elseif need.type == "might" then
+    bgColor = {100,100,100,255}
+  elseif need.type == "food" then
+    bgColor = {0,200,0,255}
+  elseif need.type == "faith" then
+    bgColor = {250,150,150,255}
+  end
+  
+  met = {}
+  if need.met then
+    met = {0,255,0,255}
+  else
+    met = {255,0,0,255}
+  end
+ 
+  local view = lc:build("linear", {height=20, width=20, backgroundColor = bgColor, margin=lc.margin(5, 2)})
+  view:addChild(lc:build("linear", {height=5, width=5, backgroundColor = met, border={color={255,255,255,255}, thickness=1 }, padding=lc.padding(10,2,2,10)}))
+  return view
+end
+
 function drawIssue(issue, x, y)
     if issue.type == "problem" then
       love.graphics.setColor(150,0,0,255)

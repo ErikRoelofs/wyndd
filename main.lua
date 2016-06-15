@@ -23,6 +23,8 @@
 if arg[#arg] == "-debug" then debug = true else debug = false end
 if debug then require("mobdebug").start() end
 
+lc = require "renderer"
+
 require "draw"
 require "resource"
 require "reward"
@@ -31,10 +33,13 @@ require "faction"
 require "validation"
 
 function love.load()
-  
-  currentSeason = 1
-  seasons = { "spring", "summer", "autumn", "winter" }
+    
+  seasons = { "spring", "summer", "autumn", "winter" }  
   year = 0
+  currentSeason = 1
+    
+    
+  font = love.graphics.newFont()
   
   issues = {}
   resources = {
@@ -48,6 +53,10 @@ function love.load()
   }
   score = 0
   mouse = { x = 0, y = 0 }
+  
+  scoreText = { value = "Score: " .. score }
+  currentTurnText = { value = getSeason() .. ", year " .. year }
+  
   selectedResource = {}
   
   factions = {}
@@ -57,7 +66,6 @@ function love.load()
     table.insert( factions, buildFactionFromTable(factionToMake) )
   end
   
-
   function findFactionByIdentifier(id)
     for k, v in ipairs(factions) do
       if v.identifier == id then
@@ -71,9 +79,27 @@ function love.load()
   convert( require "decks/guilds" )
   convert( require "decks/priests" )
 
-  
   gameOver = false
   
+  root = lc:build("root", {direction="v"})
+  
+  local layout = lc:build("linear", {width = "fill", height = 25, backgroundColor = {105,205,55,100}, direction = "h"})
+  
+  local score = lc:build("text", {width = 200, height = "fill", data = scoreText, textColor = {255,255,255,255}, padding = lc.padding(5,5,5,5)})
+  layout:addChild(score)
+  local turn = lc:build("text", {width = 200, height = "fill", data = currentTurnText, textColor = {255,255,255,255}, padding = lc.padding(5,5,5,5)})
+  layout:addChild(turn)
+  
+  issueView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {100,200,50,100}, padding = lc.padding(5), weight=2})
+  resourceView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {95,195,45,100}, padding = lc.padding(5)})
+  factionView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {90,190,40,100}, padding = lc.padding(5)})
+  
+  root:addChild(layout)
+  root:addChild(issueView)
+  root:addChild(resourceView)
+  root:addChild(factionView)
+  
+  root:layoutingPass()
 end
 
 function convert(potentialData)
@@ -84,10 +110,14 @@ function convert(potentialData)
 end
 
 function love.update(dt)  
+  scoreText.value = "Score: " .. score
+  currentTurnText.value = getSeason() .. ", year " .. year
+
 end
 
 function love.draw(dt)
   
+  --[[
   if gameOver then
     love.graphics.print("The game has ended. Your score is: " .. score, 300, 300 )
     return
@@ -111,7 +141,8 @@ function love.draw(dt)
   for k, faction in ipairs(factions) do
     drawFaction(faction, -150 + 200 * k, 300 )
   end
-
+  ]]
+  root:render()
 end
 
 function love.keypressed(key, scancode)
@@ -187,21 +218,17 @@ function resolveAllIssues()
 end
 
 function revealNewIssues()
-  revealNewProblems()
-  revealNewOpportunities()
   
+  issueView:removeAllChildren()
+
   for k, faction in ipairs(factions) do
-    faction:revealNewIssues()
+    faction:revealNewIssues()    
   end
   
-end
-
-function revealNewProblems()
-
-end
-
-function revealNewOpportunities()
-
+  for k, issue in ipairs(issues) do
+    issueView:addChild(makeViewForIssue(issue))
+  end
+  
 end
 
 function returnAllResources()
@@ -223,7 +250,7 @@ function checkWinLose()
 end
 
 function backToAssignPhase()
-  
+  root:layoutingPass()
 end
 
 function assignPhase()  

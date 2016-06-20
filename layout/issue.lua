@@ -1,3 +1,21 @@
+local function timeInfo(issue)
+  local timeInfo = ''
+  
+  if issue.repeats > 1 then
+    timeInfo = timeInfo .. "r: " .. issue.repeats .. "x"
+  end
+  if issue.repeats > 1 and issue.delayed > 1 then
+    timeInfo = timeInfo .. " / "
+  end
+  if issue.delayed > 1 then
+    timeInfo = timeInfo .. "d: " .. issue.delayed .. "x"
+  end
+  if issue.persistent then
+    timeInfo = timeInfo .. " (P)"
+  end
+  return timeInfo
+end
+
 return function(lc)
   return {
     build = function (base, options)
@@ -28,14 +46,15 @@ return function(lc)
       end
       view:addChild(gainsView)
       
-            view:addChild(lc:build("text", {height="wrap", width="wrap", data = { value = "Losses: " }, padding = lc.padding(5) }))
+      view:addChild(lc:build("text", {height="wrap", width="wrap", data = { value = "Losses: " }, padding = lc.padding(5) }))
 
-      
       local lossesView = lc:build("linear", {height="wrap", width="fill", direction="h"})  
       for k, loss in ipairs(options.losses ) do
         lossesView:addChild(loss:getView())
       end
       view:addChild(lossesView)
+      
+      view:addChild(lc:build("text", {width="wrap", height="wrap",data = { value = timeInfo(options) } }))
       
       return view
     end,
@@ -66,7 +85,24 @@ return function(lc)
           }
         },
         gains = {},
-        losses = {}
+        losses = {},
+        metNeeds = {
+            required = true,
+            schemaType = "boolean"
+        },
+        repeats = {
+          required = true,
+          schemaType = "number"
+        },
+        persistent = {
+          required = true,
+          schemaType = "boolean"
+        },
+        delayed = {
+          required = true,
+          schemaType = "number"
+        }
+        
       }
   }
 end

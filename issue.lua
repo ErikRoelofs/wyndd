@@ -42,7 +42,7 @@ function newIssue(issueType, name, needs, gains, losses, repeats, persistent, de
     metNeeds = function(self)
       local met = true
       for k, need in ipairs(self.needs) do
-        met = met and need.met
+        met = met and (need.met or false)
       end
       return met
     end,

@@ -9,7 +9,7 @@ end
 
 function makeViewForIssue(lc, issue)
     
-    return lc:build("issue", { type = issue.type, name = issue.name, needs = issue.needs, gains = issue.gains, losses = issue.losses } )
+    return lc:build("issue", { type = issue.type, name = issue.name, needs = issue.needs, gains = issue.gains, losses = issue.losses, repeats = issue.repeats, persistent = issue.persistent, delayed = issue.delayed, metNeeds = issue:metNeeds()  } )
     
 end
 

@@ -7,39 +7,10 @@ function drawFaction(faction, x, y)
   
 end
 
-function makeViewForIssue(issue)
+function makeViewForIssue(lc, issue)
     
-  local bgColor = {}
-  if issue.type == "problem" then
-    bgColor = {150,0,0,255}
-  elseif issue.type == "opportunity" then
-    bgColor = {0,150,0,255}
-  end
-  
-  local view = lc:build("linear", {height="wrap", width="wrap", direction="v", backgroundColor = bgColor})
-  
-  view:addChild(lc:build("text", {height="wrap", width="wrap", data = { value = issue.name }, padding = lc.padding(5) }))
-  
-  local needsView = lc:build("linear", {height="wrap", width="fill", direction="h"})  
-  for k, need in ipairs(issue.needs) do
-    needsView:addChild(makeViewForNeed(need))
-  end
-  view:addChild(needsView)
-  
-  local gainsView = lc:build("linear", {height="wrap", width="fill", direction="h"})  
-  for k, gain in ipairs(issue.gains ) do
-    --gainsView:addChild(gain:getView())
-  end
-  view:addChild(gainsView)
-  
-  local lossesView = lc:build("linear", {height="wrap", width="fill", direction="h"})  
-  for k, loss in ipairs(issue.losses ) do
-    --lossesView:addChild(loss:getView())
-  end
-  view:addChild(lossesView)
-  
-  
-  return view
+    return lc:build("issue", { type = issue.type, name = issue.name, needs = issue.needs, gains = issue.gains, losses = issue.losses } )
+    
 end
 
 function makeViewForNeed(need)

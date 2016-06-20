@@ -81,6 +81,10 @@ function love.load()
 
   gameOver = false
   
+  lc:register("issue", require "layout/issue"(lc))
+  lc:register("need", require "layout/need"(lc))
+  lc:register("resource", require "layout/resource"(lc))
+  
   root = lc:build("root", {direction="v"})
   
   local layout = lc:build("linear", {width = "fill", height = 25, backgroundColor = {105,205,55,100}, direction = "h"})
@@ -226,7 +230,7 @@ function revealNewIssues()
   end
   
   for k, issue in ipairs(issues) do
-    issueView:addChild(makeViewForIssue(issue))
+    issueView:addChild(makeViewForIssue(lc, issue))
   end
   
 end

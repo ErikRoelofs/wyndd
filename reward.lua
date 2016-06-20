@@ -4,11 +4,14 @@ function newScoreReward(value)
     resolve = function() 
       score = score + value 
     end, 
-    draw = function(self, x, y) 
-      if self.value > 0 then
-        love.graphics.print( "+" .. self.value .. " score", x, y) 
+    getView = function(self)
+      return lc:build("text", { width = "wrap", height = "wrap", data = self.getText })
+    end,
+    getText = function()
+      if value > 0 then
+        return "+" .. value .. " score"
       else
-        love.graphics.print( self.value .. " score", x, y) 
+        return value .. " score"
       end 
     end
   }
@@ -18,7 +21,7 @@ function newResourceReward(resource)
   return {
     resource = resource, 
     resolve = function(self) table.insert(resources, self.resource) end, 
-    draw = function(self, x, y) drawResource(self.resource, x, y) end 
+    getView = function(self) return lc:build("resource", self.resource) end
   }  
 end
 
@@ -29,8 +32,11 @@ function newStandingReward(faction, value)
       resolve = function(self) 
         faction.standing = faction.standing + value
       end,
-      draw = function(self, x, y)
-        love.graphics.print( self.value .. " standing with " .. faction.name, x, y)
+      getView = function(self)
+        return lc:build("text", { width = "wrap", height = "wrap", data = self.getText })
+      end,
+      getText = function()
+        return value .. " standing with " .. faction.name
       end
   }
 end
@@ -42,9 +48,12 @@ function newPowerReward(faction, value)
     resolve = function(self) 
       faction.power = faction.power + value
     end,
-    draw = function(self, x, y)
-      love.graphics.print( self.value .. " power for " .. faction.name, x, y)
-    end
+      getView = function(self)
+        return lc:build("text", { width = "wrap", height = "wrap", data = self.getText })
+      end,
+      getText = function()
+        return value .. " power for " .. faction.name
+      end
   }
 end
 
@@ -54,8 +63,11 @@ function newIssueReward(issueFunction)
     resolve = function(self) 
       table.insert(issues, self.issueFunction())
     end,
-    draw = function(self, x, y)
-      love.graphics.print( "A new issue", x, y)
+    getView = function(self)
+      return lc:build("text", { width = "wrap", height = "wrap", data = self.getText })
+    end,
+    getText = function()
+      return "A new issue"
     end
   }
 end
@@ -66,8 +78,11 @@ function newFactionReward(faction)
       resolve = function(self)
         table.insert(factions, self.faction)
       end,
-      draw = function(self,x,y)
-        love.graphics.print("A new faction", x, y)
+      getView = function(self)
+        return lc:build("text", { width = "wrap", height = "wrap", data = self.getText })
+      end,
+      getText = function()
+        return "A new faction"
       end
   }
 end
@@ -77,8 +92,11 @@ function newGameOverReward()
     resolve = function(self)
       gameOver = true
     end,
-    draw = function(self,x,y)
-      love.graphics.print("The game ends.", x,y)
+    getView = function(self)
+      return lc:build("text", { width = "wrap", height = "wrap", data = self.getText })
+    end,
+    getText = function()
+      return "The game ends"
     end
   }
 end

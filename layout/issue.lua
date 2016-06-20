@@ -1,3 +1,4 @@
+-- needs to render its MET state!
 local function timeInfo(issue)
   local timeInfo = ''
   

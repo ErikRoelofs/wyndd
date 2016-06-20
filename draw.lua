@@ -38,54 +38,6 @@ function makeViewForNeed(need)
   return view
 end
 
-function drawIssue(issue, x, y)
-    if issue.type == "problem" then
-      love.graphics.setColor(150,0,0,255)
-    elseif issue.type == "opportunity" then
-      love.graphics.setColor(0,150,0,255)
-    end
-    love.graphics.rectangle("fill", x, y, 150,150)
-    
-    for k, need in ipairs(issue.needs) do
-      drawNeed(need, x - 15 + k * 20, y + 20)
-    end
-    
-    for k, gain in ipairs(issue.gains) do
-      drawGain(gain, x - 15 + k * 20, y + 40)
-    end
-  
-    for k, loss in ipairs(issue.losses) do
-      drawLoss(loss, x - 15 + k * 20, y + 60)
-    end
-  
-    love.graphics.setColor(255,255,255,255)
-    love.graphics.rectangle("fill", x+2,y+2, 7, 7)
-    love.graphics.print(issue.name, x + 15, y + 2 )
-    
-    if issue:metNeeds() then
-      love.graphics.setColor(0,255,0,255)
-    else
-      love.graphics.setColor(255,0,0,255)
-    end
-    love.graphics.rectangle("fill", x+3,y+3, 5, 5)
-    
-    local timeInfo = ''
-    
-    if issue.repeats > 1 then
-      timeInfo = timeInfo .. "r: " .. issue.repeats .. "x"
-    end
-    if issue.repeats > 1 and issue.delayed > 1 then
-      timeInfo = timeInfo .. " / "
-    end
-    if issue.delayed > 1 then
-      timeInfo = timeInfo .. "d: " .. issue.delayed .. "x"
-    end
-  
-    love.graphics.setColor(255,255,255,255)
-    love.graphics.print(timeInfo, x, y+135)
-
-end
-
 function drawNeed(need, x, y)
   if need.type == "wealth" then
     love.graphics.setColor(0,200,150,255)

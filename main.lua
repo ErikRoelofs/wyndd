@@ -84,6 +84,7 @@ function love.load()
   lc:register("issue", require "layout/issue"(lc))
   lc:register("need", require "layout/need"(lc))
   lc:register("resource", require "layout/resource"(lc))
+  lc:register("indicator", require "layout/indicator"(lc))
   
   root = lc:build("root", {direction="v"})
   

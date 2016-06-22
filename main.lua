@@ -37,6 +37,9 @@ function love.load()
   seasons = { "spring", "summer", "autumn", "winter" }  
   year = 0
   currentSeason = 1
+  
+  resourceLookup = {}
+  issueLookup = {}
     
     
   font = love.graphics.newFont()
@@ -97,6 +100,8 @@ function love.load()
   layout:addChild(score)
   local turn = lc:build("text", {width = 200, height = "fill", data = currentTurnText, textColor = {255,255,255,255}, padding = lc.padding(5,5,5,5)})
   layout:addChild(turn)
+  endTurn = lc:build("text", {width=200, height="fill", data = function() return "End the turn" end, backgroundColor = { 100, 100, 100, 255 }, border = { color = { 125, 125, 125, 255 }, thickness = 2 }, gravity = {"center", "center"}})
+  layout:addChild(endTurn)
   
   issueView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {100,200,50,100}, padding = lc.padding(5), weight=2})
   resourceView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {95,195,45,100}, padding = lc.padding(5)})
@@ -111,6 +116,8 @@ function love.load()
   stackView:addChild(dragbox)
   
   stackView:layoutingPass()
+  
+  endTheTurn()
 end
 
 function convert(potentialData)
@@ -173,6 +180,12 @@ function love.mousepressed(x, y, button)
           selectedResource = {}          
         end
       end
+    end
+  end
+  
+  for k, v in ipairs(list) do
+    if v == endTurn then
+      endTheTurn()
     end
   end
 

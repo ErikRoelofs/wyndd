@@ -58,7 +58,7 @@ return function(lc)
       
       view:addChild(lc:build("text", {height="wrap", width="wrap", data = { value = "Losses: " }, border = lossesBorder, padding = lc.padding(5) }))
 
-      local lossesView = lc:build("linear", {height="wrap", width="fill", direction="h", margin=lc.margin(0,0,0,5)})  
+      local lossesView = lc:build("linear", {height="wrap", width="fill", direction="v", margin=lc.margin(0,0,0,5)})  
       for k, loss in ipairs(options.losses ) do
         lossesView:addChild(loss:getView())
       end

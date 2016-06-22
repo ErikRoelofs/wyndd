@@ -23,6 +23,10 @@ return function(lc)
         consumable = {
           required = false,
           schemaType = "boolean"
+        },
+        used = {
+          required = false,
+          schemaType = "boolean"
         }
       }
     

@@ -10,6 +10,11 @@ return function(lc)
       end
       
       local view = lc:build("text", {width=11, height=11, border = { color = {255,255,255,255}, thickness = 2}, backgroundColor = getColor(), data = function() return "" end, padding = lc.padding(2), margin = lc.margin(2)})
+      
+      view.update = function(self, dt)
+        view.backgroundColor = getColor()
+      end
+      
       return view      
     end,
     schema = { 

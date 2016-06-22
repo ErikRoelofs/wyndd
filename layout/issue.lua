@@ -65,7 +65,7 @@ return function(lc)
       view:addChild(lossesView)
       
       view:addChild(lc:build("text", {width="wrap", height="wrap",data = { value = timeInfo(options) } }))
-      view:addChild(lc:build("indicator", {value = function() return options.metNeeds end}))
+      view:addChild(lc:build("indicator", {value = function() return options.metNeeds() end}))
       
       return view
     end,
@@ -99,7 +99,7 @@ return function(lc)
         losses = {},
         metNeeds = {
             required = true,
-            schemaType = "boolean"
+            schemaType = "function"
         },
         repeats = {
           required = true,

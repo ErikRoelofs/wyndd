@@ -87,7 +87,9 @@ function love.load()
   lc:register("indicator", require "layout/indicator"(lc))
   lc:register("faction", require "layout/faction"(lc))
   
-  root = lc:build("root", {direction="v"})
+  stackView = lc:build("stackroot", {})
+  root = lc:build("linear", {width = "fill", height="fill", direction="v"})
+  stackView:addChild(root)
   
   local layout = lc:build("linear", {width = "fill", height = 25, backgroundColor = {105,205,55,100}, direction = "h"})
   
@@ -105,7 +107,10 @@ function love.load()
   root:addChild(resourceView)
   root:addChild(factionView)
   
-  root:layoutingPass()
+  dragbox = lc:build("dragbox", {width="fill", height="fill"})
+  stackView:addChild(dragbox)
+  
+  stackView:layoutingPass()
 end
 
 function convert(potentialData)
@@ -118,11 +123,11 @@ end
 function love.update(dt)  
   scoreText.value = "Score: " .. score
   currentTurnText.value = getSeason() .. ", year " .. year
-  root:update(dt)
+  stackView:update(dt)
 end
 
 function love.draw(dt)
-  root:render()
+  stackView:render()
 end
 
 function love.keypressed(key, scancode)
@@ -135,23 +140,42 @@ function love.mousepressed(x, y, button)
   mouse.x = x
   mouse.y = y
       
-  for k, resource in ipairs(resources) do
-    if x > k * 20 and x < k * 20 + 15 and y > 250 and y < 270 then
-      selectedResource.key = k
-      selectedResource.resource = resource
-    end    
+  local list = root:clickedViews(x,y)
+  for k, v in ipairs(list) do
+    if resourceLookup[v] then
+      if not resourceLookup[v].resource.used then
+        if selectedResource.key then
+          dragbox:removeChild(selectedResource.view)
+          resourceView:addChild(selectedResource.view)        
+        end
+        
+        local selected = resourceLookup[v]
+        for k, v in ipairs(resources) do
+          if v == selected.resource then
+            selected.key = k
+          end
+        end
+        selectedResource = selected
+        resourceView:removeChild(v)
+        dragbox:addChild(v)
+      end
+    end
   end
-  
+
   if selectedResource.key then
-    for k, issue in ipairs(issues) do
-      if x > k * 160 - 150 and x < k * 160 and y > 40 and y < 190 then
+    for k, v in ipairs(list) do
+      if issueLookup[v] then
+        local issue = issueLookup[v]
         if issue:give(selectedResource.resource) then          
           table.remove( resources, selectedResource.key )
-          selectedResource = {}
+          dragbox:removeChild(selectedResource.view)
+          selectedResource.resource.used = true
+          selectedResource = {}          
         end
       end
     end
   end
+
 end
 
 function getSeason()
@@ -200,26 +224,32 @@ end
 function revealNewIssues()
   
   issueView:removeAllChildren()
+  issueLookup = {}
 
   for k, faction in ipairs(factions) do
     faction:revealNewIssues()    
   end
   
   for k, issue in ipairs(issues) do
-    issueView:addChild(makeViewForIssue(lc, issue))
+    local child = makeViewForIssue(lc, issue)
+    issueView:addChild(child)
+    issueLookup[child] = issue
   end
   
 end
 
 function returnAllResources()
   
+  resourceLookup = {}
   resourceView:removeAllChildren()
+  
   
   for i, issue in ipairs(issues) do
     local r = #issue.resources
     while r > 0 do
       local resource = issue.resources[r]
       if not resource.consumable then
+        resource.used = false
         table.insert(resources, resource)
       end
       table.remove(issue.resources, r)
@@ -228,7 +258,9 @@ function returnAllResources()
   end
   
   for k, r in ipairs(resources) do
-    resourceView:addChild(lc:build("resource", r))
+    local child = lc:build("resource", r)
+    resourceView:addChild(child)
+    resourceLookup[child] = {resource = r, view = child}
   end
   
 end
@@ -238,7 +270,7 @@ function checkWinLose()
 end
 
 function backToAssignPhase()
-  root:layoutingPass()
+  stackView:layoutingPass()
 end
 
 function assignPhase()  

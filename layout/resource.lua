@@ -12,7 +12,7 @@ end
 return function(lc)
   return {
     build = function (base, options)
-      return lc:build("image", { width = "wrap", height = "wrap", file = pickFile(options.type)})
+      return lc:build("image", { width = "wrap", height = "wrap", file = pickFile(options.type), margin=lc.margin(5)})
     end,
     schema =
       {

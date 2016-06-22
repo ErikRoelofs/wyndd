@@ -85,6 +85,7 @@ function love.load()
   lc:register("need", require "layout/need"(lc))
   lc:register("resource", require "layout/resource"(lc))
   lc:register("indicator", require "layout/indicator"(lc))
+  lc:register("faction", require "layout/faction"(lc))
   
   root = lc:build("root", {direction="v"})
   
@@ -117,7 +118,7 @@ end
 function love.update(dt)  
   scoreText.value = "Score: " .. score
   currentTurnText.value = getSeason() .. ", year " .. year
-
+  root:update(dt)
 end
 
 function love.draw(dt)
@@ -237,6 +238,9 @@ function revealNewIssues()
 end
 
 function returnAllResources()
+  
+  resourceView:removeAllChildren()
+  
   for i, issue in ipairs(issues) do
     local r = #issue.resources
     while r > 0 do
@@ -248,6 +252,11 @@ function returnAllResources()
       r = r -1
     end
   end
+  
+  for k, r in ipairs(resources) do
+    resourceView:addChild(lc:build("resource", r))
+  end
+  
 end
 
 function checkWinLose()
@@ -267,6 +276,9 @@ function cleanup()
 end
 
 function cleanFactions()
+  
+  factionView:removeAllChildren()
+  
   for k, faction in ipairs(factions) do
     if faction.standing > 10 then
       score = score + faction.standing - 10
@@ -285,6 +297,11 @@ function cleanFactions()
       faction.power = 1
     end    
   end
+  
+  for k, faction in ipairs(factions) do
+    factionView:addChild( lc:build("faction", {name = faction.name, power = faction.power, standing = faction.standing}))
+  end
+  
 end
 
 function cleanDoneIssues()

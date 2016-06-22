@@ -146,13 +146,14 @@ function love.keypressed(key, scancode)
   end
 end
 
+function dropit()
+  dragbox:removeChild(selectedResource.view)
+  resourceView:addChild(selectedResource.view)
+  selectedResource = {}  
+end
+
 function love.mousepressed(x, y, button)
   
-  local function dropit()
-    dragbox:removeChild(selectedResource.view)
-    resourceView:addChild(selectedResource.view)
-    selectedResource = {}  
-  end
   
   mouse.x = x
   mouse.y = y
@@ -226,6 +227,10 @@ function nextSeason()
 end
 
 function endTheTurn()
+  if selectedResource.key then
+    dropit()
+  end
+  
   resolveAllIssues()
   returnAllResources()
   cleanup()

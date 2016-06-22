@@ -122,32 +122,6 @@ function love.update(dt)
 end
 
 function love.draw(dt)
-  
-  --[[
-  if gameOver then
-    love.graphics.print("The game has ended. Your score is: " .. score, 300, 300 )
-    return
-  end
-  
-  love.graphics.setColor(255,255,255,255)
-  love.graphics.print(getSeason() .. ", year " .. year, 20, 20 )
-  
-  love.graphics.print("score: " .. score ,150, 20 )
-  
-  love.graphics.print("mouse: " .. mouse.x .. "," .. mouse.y,220, 20 )
-  
-  for k, issue in ipairs(issues) do
-    drawIssue(issue, k * 160 - 150, 40)    
-  end
-
-  for k, resource in ipairs(resources) do
-    drawResource(resource, k * 20, 250 )
-  end
-  
-  for k, faction in ipairs(factions) do
-    drawFaction(faction, -150 + 200 * k, 300 )
-  end
-  ]]
   root:render()
 end
 

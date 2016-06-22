@@ -131,6 +131,9 @@ function love.update(dt)
   scoreText.value = "Score: " .. score
   currentTurnText.value = getSeason() .. ", year " .. year
   stackView:update(dt)
+  if selectedResource.key then
+    dragbox.offset = { love.mouse.getX(), love.mouse.getY() }
+  end
 end
 
 function love.draw(dt)
@@ -144,6 +147,13 @@ function love.keypressed(key, scancode)
 end
 
 function love.mousepressed(x, y, button)
+  
+  local function dropit()
+    dragbox:removeChild(selectedResource.view)
+    resourceView:addChild(selectedResource.view)
+    selectedResource = {}  
+  end
+  
   mouse.x = x
   mouse.y = y
       
@@ -152,8 +162,7 @@ function love.mousepressed(x, y, button)
     if resourceLookup[v] then
       if not resourceLookup[v].resource.used then
         if selectedResource.key then
-          dragbox:removeChild(selectedResource.view)
-          resourceView:addChild(selectedResource.view)        
+          dropit()
         end
         
         local selected = resourceLookup[v]
@@ -165,6 +174,7 @@ function love.mousepressed(x, y, button)
         selectedResource = selected
         resourceView:removeChild(v)
         dragbox:addChild(v)
+        return
       end
     end
   end
@@ -178,6 +188,7 @@ function love.mousepressed(x, y, button)
           dragbox:removeChild(selectedResource.view)
           selectedResource.resource.used = true
           selectedResource = {}          
+          return
         end
       end
     end
@@ -186,7 +197,12 @@ function love.mousepressed(x, y, button)
   for k, v in ipairs(list) do
     if v == endTurn then
       endTheTurn()
+      return
     end
+  end
+
+  if selectedResource.key then
+    dropit()
   end
 
 end

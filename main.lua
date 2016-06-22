@@ -137,11 +137,17 @@ function love.update(dt)
 end
 
 function love.draw(dt)
-  stackView:render()
+  if gameOver then
+    love.graphics.print("game over", 50, 50)
+    love.graphics.print("final score: " .. score , 50, 70)
+    love.graphics.print("final turn: " .. getSeason() .. ", year: " .. getYear(), 50, 90)
+  else
+    stackView:render()
+  end
 end
 
 function love.keypressed(key, scancode)
-  if key == "q" then
+  if key == "q" and not gameOver then
     endTheTurn()
   end
 end

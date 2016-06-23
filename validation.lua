@@ -1,3 +1,7 @@
+-- unique validator
+-- needs completed issue validator
+-- needs existing other faction validator
+
 function andValidator(validationTable)
   local validators = {}
   for k, v in ipairs(validationTable) do
@@ -63,6 +67,12 @@ function seasonalValidator(season)
   end
 end
 
+function fromYearValidator(year)
+  return function()
+    return getYear() >= year
+  end
+end
+
 function buildValidatorFromTable(validator)
   if validator[1] == "never" then
     return neverValidator
@@ -78,6 +88,8 @@ function buildValidatorFromTable(validator)
     return andValidator(validator[2])
   elseif validator[1] == "OR" then
     return orValidator(validator[2])
+  elseif validator[1] == "year" then
+    return fromYearValidator(validator[2])
   else
     error("Unknown validator type: " .. validator[1])
   end

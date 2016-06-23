@@ -1,3 +1,33 @@
+function andValidator(validationTable)
+  local validators = {}
+  for k, v in ipairs(validationTable) do
+    table.insert(validators, buildValidatorFromTable(v))
+  end
+  
+  return function()
+    local all = true
+    for k, v in ipairs(validators) do
+      all = all and v()
+    end
+    return all
+  end
+end
+
+function orValidator(validationTable)
+  local validators = {}
+  for k, v in ipairs(validationTable) do
+    table.insert(validators, buildValidatorFromTable(v))
+  end
+  
+  return function()
+    local any = false
+    for k, v in ipairs(validators) do
+      any = any or v()
+    end
+    return any
+  end
+end
+
 function neverValidator()
   return false
 end
@@ -44,6 +74,10 @@ function buildValidatorFromTable(validator)
     return arithmeticValidator(findFactionByIdentifier(validator[2]), validator[3], validator[4], validator[5])
   elseif validator[1] == "seasonal" then
     return seasonalValidator(validator[2])
+  elseif validator[1] == "AND" then
+    return andValidator(validator[2])
+  elseif validator[1] == "OR" then
+    return orValidator(validator[2])
   else
     error("Unknown validator type: " .. validator[1])
   end

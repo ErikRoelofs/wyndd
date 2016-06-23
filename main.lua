@@ -100,8 +100,10 @@ function love.load()
   layout:addChild(score)
   local turn = lc:build("text", {width = 200, height = "fill", data = currentTurnText, textColor = {255,255,255,255}, padding = lc.padding(5,5,5,5)})
   layout:addChild(turn)
-  endTurn = lc:build("text", {width=200, height="fill", data = function() return "End the turn" end, backgroundColor = { 100, 100, 100, 255 }, border = { color = { 125, 125, 125, 255 }, thickness = 2 }, gravity = {"center", "center"}})
-  layout:addChild(endTurn)
+  endTurnButton = lc:build("text", {width=200, height="fill", data = function() return "End the turn" end, backgroundColor = { 100, 100, 100, 255 }, border = { color = { 125, 125, 125, 255 }, thickness = 2 }, gravity = {"center", "center"}})
+  layout:addChild(endTurnButton)
+  returnResourcesButton = lc:build("text", {width=200, height="fill", data = function() return "Return resources" end, backgroundColor = { 100, 100, 100, 255 }, border = { color = { 125, 125, 125, 255 }, thickness = 2 }, gravity = {"center", "center"}})
+  layout:addChild(returnResourcesButton)
   
   issueView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {100,200,50,100}, padding = lc.padding(5), weight=2})
   resourceView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {95,195,45,100}, padding = lc.padding(5)})
@@ -202,15 +204,26 @@ function love.mousepressed(x, y, button)
   end
   
   for k, v in ipairs(list) do
-    if v == endTurn then
+    if v == endTurnButton then
       endTheTurn()
       return
     end
   end
 
+  for k, v in ipairs(list) do
+    if v == returnResourcesButton then
+      returnAllResources(true)
+      return
+    end
+  end
+
+
+
   if selectedResource.key then
     dropit()
+    return
   end
+  
 
 end
 
@@ -278,29 +291,31 @@ function revealNewIssues()
   
 end
 
-function returnAllResources()
+function returnAllResources(evenConsumables)
+  evenConsumables = evenConsumables or false
   
   resourceLookup = {}
   resourceView:removeAllChildren()
-  
   
   for i, issue in ipairs(issues) do
     local r = #issue.resources
     while r > 0 do
       local resource = issue.resources[r]
-      if not resource.consumable then
+      if evenConsumables or not resource.consumable then
         resource.used = false
         table.insert(resources, resource)
       end
       table.remove(issue.resources, r)
       r = r -1
     end
+    issue:allNeedsNotMet()
   end
   
   for k, r in ipairs(resources) do
     local child = lc:build("resource", r)
     resourceView:addChild(child)
     resourceLookup[child] = {resource = r, view = child}
+    resourceView:layoutingPass()
   end
   
 end

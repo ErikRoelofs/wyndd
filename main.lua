@@ -64,19 +64,29 @@ function love.load()
   selectedResource = {}
   
   factions = {}
+  availableFactions = {}
   
   local factionData = require "factions/factions"
   for k, factionToMake in ipairs(factionData) do
-    table.insert( factions, buildFactionFromTable(factionToMake) )
+    local faction = buildFactionFromTable(factionToMake)
+    if factionToMake.initial then
+      table.insert( factions, faction )
+    end
+    availableFactions[faction.identifier] = faction  
+  end
+  
+  function isFactionAvailable(id)
+    for k, v in ipairs(factions) do
+      if v.identifier == id then
+        return true
+      end
+    end
+    return false
   end
   
   function findFactionByIdentifier(id)
-    for k, v in ipairs(factions) do
-      if v.identifier == id then
-        return v
-      end
-    end
-    error("Could not find faction: " .. id)
+    assert(availableFactions[id], "Could not find faction: " .. id)
+    return availableFactions[id]
   end
   
   convert( require "decks/peasants" )

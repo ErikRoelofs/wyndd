@@ -83,7 +83,12 @@ end
 
 function factionExists(factionId)
   return function()
-    return pcall(function() findFactionByIdentifier(factionId) end) end
+    return isFactionAvailable(factionId) end
+end
+
+function factionNotExists(factionId)
+  return function()
+    return not isFactionAvailable(factionId) end
 end
 
 function buildValidatorFromTable(validator)
@@ -109,6 +114,8 @@ function buildValidatorFromTable(validator)
     return flagIsNotSetValidator(validator[2])
   elseif validator[1] == "faction_exists" then
     return factionExists(validator[2])
+  elseif validator[1] == "faction_not_exists" then
+    return factionNotExists(validator[2])
   else
     error("Unknown validator type: " .. validator[1])
   end

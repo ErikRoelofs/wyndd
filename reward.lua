@@ -87,11 +87,11 @@ function newIssueReward(issueFunction)
   }
 end
 
-function newFactionReward(faction)
+function newFactionReward(factionId)
   return {
       faction = faction,
       resolve = function(self)
-        table.insert(factions, self.faction)
+        table.insert(factions, availableFactions[factionId])
       end,
       getView = function(self)
         return lc:build("text", { width = "wrap", height = "wrap", data = self.getText })
@@ -154,6 +154,8 @@ function buildRewardFromTable(table)
     return newLoseResourceReward(table[2])
   elseif table[1] == "flag" then
     return newFlagReward(table[2], table[3])  
+  elseif table[1] == "faction" then
+    return newFactionReward(table[2])  
   else
     error("Unknown type of reward: " .. table[1])
   end

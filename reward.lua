@@ -150,7 +150,7 @@ function buildRewardFromTable(table)
     return newIssueReward(findIssueFunctionByIdentifier(table[2]))
   elseif table[1] == "resource" then
     return newResourceReward(newResource(table[2], table[3]))
-  elseif table[1] == "loseresource" then
+  elseif table[1] == "lose_resource" then
     return newLoseResourceReward(table[2])
   elseif table[1] == "flag" then
     return newFlagReward(table[2], table[3])  

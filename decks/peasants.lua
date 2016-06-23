@@ -54,7 +54,7 @@ local potentials = {
       losses = {{"score", -5}, {"issue", "peasant_riot_2"}},
       delayed = 3,
     },
-    validator = { "arithmetic", "peasants", "standing", 5, "<" },
+    validator = { "arithmetic", "peasants", "standing", 3, "<" },
     faction = "peasants"
   },
   {
@@ -78,7 +78,7 @@ local potentials = {
       gains = {{"resource", "food", true}},
       losses = {{"standing", "peasants", 1}}
     },
-    validator = { "seasonal", "autumn" },
+    validator = { "OR", {{ "seasonal", "autumn" }, { "seasonal", "summer" }}},
     faction = "peasants"
   },
   {
@@ -182,7 +182,32 @@ local potentials = {
     validator = { "always" },
     faction = "peasants"
   },
-    
+  {
+    identifier = "peasant_cropdeath",
+    issue = {
+      type = "problem",
+      name = "Withering crops",
+      needs = { {"faith"}, {"wealth"} },
+      gains = {{"score", 5}},
+      losses = {{"power", "peasants", -1}, {"lose_resource", "food"}}
+    },
+    validator = { "AND", {{"rare"}, {"seasonal", "spring"} }},
+    faction = "peasants"
+  },
+  {
+    identifier = "peasant_landdispute",
+    issue = {
+      type = "problem",
+      name = "Land disputes",
+      needs = { {"official"},{"might"} },
+      gains = {{"score", 10}, {"standing", "peasants", 1}},
+      losses = {{"score", -10}, {"power", "peasants", -1}},
+      repeats = 3,
+      delayed = 4
+    },
+    validator = { "rare" },
+    faction = "peasants"
+  }
 }
 
 return potentials

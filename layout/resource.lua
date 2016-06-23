@@ -3,13 +3,15 @@ local pics = {
     food = love.graphics.newImage("assets/food.png"),
     wealth = love.graphics.newImage("assets/wealth.png"),
     might = love.graphics.newImage("assets/might.png"),
-    faith = love.graphics.newImage("assets/faith.png")
+    faith = love.graphics.newImage("assets/faith.png"),
+    official = love.graphics.newImage("assets/official.png")
   },
   {
     food = love.graphics.newImage("assets/food-c.png"),
     wealth = love.graphics.newImage("assets/wealth-c.png"),
     might = love.graphics.newImage("assets/might-c.png"),
-    faith = love.graphics.newImage("assets/faith-c.png")
+    faith = love.graphics.newImage("assets/faith-c.png"),
+    official = love.graphics.newImage("assets/official-c.png")
   }
 }
 

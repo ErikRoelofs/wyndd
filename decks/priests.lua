@@ -27,9 +27,9 @@ local potentials = {
       name = "Give blessing",
       needs = { {"faith"}},
       gains = {{"score", 1}},
-      losses = {},      
+      losses = {},
     },
-    validator = { "always" },
+    validator = {"always"},
     faction = "priests"
   }, 
 }

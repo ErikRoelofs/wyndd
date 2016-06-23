@@ -1,17 +1,11 @@
 --[[
-  V chained issues
-  V multi-turn issues
-  V persistent issues
-  V faction creating issues
-  V faction-based issues
-  V win/lose condition
-  V hungry needs
-  V delayed resolve issues
-    
   - create some factions with assigned decks
   - build some issue decks
   - define some resource types
   - work on a proper UI, with scrolling probably < using renderer
+  
+  issues:
+  - receiving multiple copies of certain issues at the same time is a problem (ie; "new faction" x2)
   
   - multi-resources
   - allow viewing of complex types
@@ -54,6 +48,7 @@ function love.load()
     newResource("might"),
     newResource("might"),    
     newResource("faith"),    
+    newResource("official"),    
   }
   score = 0
   mouse = { x = 0, y = 0 }

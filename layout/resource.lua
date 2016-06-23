@@ -1,22 +1,30 @@
 local pics = {
-  food = love.graphics.newImage("assets/food.png"),
-  wealth = love.graphics.newImage("assets/wealth.png"),
-  might = love.graphics.newImage("assets/might.png"),
-  faith = love.graphics.newImage("assets/faith.png"),
+  {
+    food = love.graphics.newImage("assets/food.png"),
+    wealth = love.graphics.newImage("assets/wealth.png"),
+    might = love.graphics.newImage("assets/might.png"),
+    faith = love.graphics.newImage("assets/faith.png")
+  },
+  {
+    food = love.graphics.newImage("assets/food-c.png"),
+    wealth = love.graphics.newImage("assets/wealth-c.png"),
+    might = love.graphics.newImage("assets/might-c.png"),
+    faith = love.graphics.newImage("assets/faith-c.png")
+  }
 }
 
-local pickFile = function (type)
-  return pics[type]
+local pickFile = function (type, consumable)
+  if consumable then
+    return pics[2][type]
+  else
+    return pics[1][type]
+  end
 end
 
 return function(lc)
   return {
     build = function (base, options)
-      local border = nil
-      if options.consumable then
-        border = { color = { 255, 255, 255, 255 }, thickness = 2 }
-      end
-      return lc:build("image", { width = "wrap", height = "wrap", file = pickFile(options.type), margin=lc.margin(5), border = border})
+      return lc:build("image", { width = "wrap", height = "wrap", file = pickFile(options.type, options.consumable), margin=lc.margin(5)})
     end,
     schema =
       {

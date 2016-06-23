@@ -1,7 +1,3 @@
--- unique validator
--- needs completed issue validator
--- needs existing other faction validator
-
 function andValidator(validationTable)
   local validators = {}
   for k, v in ipairs(validationTable) do
@@ -73,6 +69,23 @@ function fromYearValidator(year)
   end
 end
 
+function flagIsSetValidator(flagName)
+  return function()    
+    return flags[flagName] ~= nil
+  end
+end
+
+function flagIsNotSetValidator(flagName)
+  return function()    
+    return flags[flagName] == nil
+  end
+end
+
+function factionExists(factionId)
+  return function()
+    return pcall(function() findFactionByIdentifier(factionId) end) end
+end
+
 function buildValidatorFromTable(validator)
   if validator[1] == "never" then
     return neverValidator
@@ -90,6 +103,12 @@ function buildValidatorFromTable(validator)
     return orValidator(validator[2])
   elseif validator[1] == "year" then
     return fromYearValidator(validator[2])
+  elseif validator[1] == "flag_set" then
+    return flagIsSetValidator(validator[2])
+  elseif validator[1] == "flag_not_set" then
+    return flagIsNotSetValidator(validator[2])
+  elseif validator[1] == "faction_exists" then
+    return factionExists(validator[2])
   else
     error("Unknown validator type: " .. validator[1])
   end

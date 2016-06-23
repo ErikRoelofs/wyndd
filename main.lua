@@ -41,6 +41,7 @@ function love.load()
   resourceLookup = {}
   issueLookup = {}
     
+  flags = {}
     
   font = love.graphics.newFont()
   

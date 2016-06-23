@@ -116,6 +116,19 @@ function newGameOverReward()
   }
 end
 
+function newFlagReward(flag, flagStore)
+  return {
+    flag = flag,
+    flagStore = flagStore,
+    resolve = function(self)
+      flags[flag] = true
+    end,
+    getView = function(self)
+      return lc:build("text", { width = 0, height = 0, data = { value = "" }})
+    end  
+  }
+end
+
 function buildRewardsFromTable(t)
   local rewards = {}
   for _, reward in ipairs(t) do
@@ -139,6 +152,8 @@ function buildRewardFromTable(table)
     return newResourceReward(newResource(table[2], table[3]))
   elseif table[1] == "loseresource" then
     return newLoseResourceReward(table[2])
+  elseif table[1] == "flag" then
+    return newFlagReward(table[2], table[3])  
   else
     error("Unknown type of reward: " .. table[1])
   end

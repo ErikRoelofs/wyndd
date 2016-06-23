@@ -1,4 +1,3 @@
--- needs to render its MET state!
 local function timeInfo(issue)
   local timeInfo = ''
   
@@ -27,7 +26,7 @@ return function(lc)
         bgColor = {0,150,0,255}
       end
       
-      local view = lc:build("linear", {height="wrap", width="wrap", direction="v", backgroundColor = bgColor})
+      local view = lc:build("linear", {height="fill", width="wrap", direction="v", backgroundColor = bgColor})
       
       view:addChild(lc:build("text", {height="wrap", width="wrap", data = { value = options.name }, padding = lc.padding(5) }))
       

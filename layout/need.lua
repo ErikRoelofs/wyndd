@@ -1,4 +1,3 @@
--- needs to render its MET state!
 local pics = {
   food = love.graphics.newImage("assets/food.png"),
   wealth = love.graphics.newImage("assets/wealth.png"),

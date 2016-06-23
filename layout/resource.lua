@@ -12,7 +12,11 @@ end
 return function(lc)
   return {
     build = function (base, options)
-      return lc:build("image", { width = "wrap", height = "wrap", file = pickFile(options.type), margin=lc.margin(5)})
+      local border = nil
+      if options.consumable then
+        border = { color = { 255, 255, 255, 255 }, thickness = 2 }
+      end
+      return lc:build("image", { width = "wrap", height = "wrap", file = pickFile(options.type), margin=lc.margin(5), border = border})
     end,
     schema =
       {

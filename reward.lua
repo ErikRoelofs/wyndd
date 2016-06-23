@@ -25,6 +25,21 @@ function newResourceReward(resource)
   }  
 end
 
+function newLoseResourceReward(resourceType)
+  return {
+    resourceType = resourceType,
+    resolve = function(self) 
+      for k, resource in ipairs(resources) do
+        if resource.type == resourceType then
+          table.remove(resources,k)
+          return
+        end
+      end
+    end,
+    getView = function(self) return lc:build("text", { width = "wrap", height="wrap", data = {value = "Lose a resource:" .. self.resourceType}}) end
+  }
+end
+
 function newStandingReward(faction, value)
   return {
       faction = faction,
@@ -122,6 +137,8 @@ function buildRewardFromTable(table)
     return newIssueReward(findIssueFunctionByIdentifier(table[2]))
   elseif table[1] == "resource" then
     return newResourceReward(newResource(table[2], table[3]))
+  elseif table[1] == "loseresource" then
+    return newLoseResourceReward(table[2])
   else
     error("Unknown type of reward: " .. table[1])
   end

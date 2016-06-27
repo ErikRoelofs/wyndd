@@ -8,3 +8,5 @@
 -- immigrants/emigrants
 -- defectors and fleeing criminals
 -- border disputes
+-- idealistic disagreements
+-- religious conflict

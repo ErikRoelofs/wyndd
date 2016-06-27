@@ -35,6 +35,8 @@ function love.load()
   resourceLookup = {}
   issueLookup = {}
     
+  baseIssueFactory = issueFactory({})
+    
   flags = {}
     
   font = love.graphics.newFont()
@@ -87,6 +89,8 @@ function love.load()
   convert( require "decks/peasants" )
   convert( require "decks/guilds" )
   convert( require "decks/priests" )
+  convertBase( require "decks/base" )
+  
 
   gameOver = false
   
@@ -132,6 +136,13 @@ function convert(potentialData)
   for k, potentialToMake in ipairs(potentialData) do
     local potential = buildPotentialFromTable(potentialToMake)    
     findFactionByIdentifier(potentialToMake.faction):addPotential(potential)
+  end
+end
+
+function convertBase(potentialData)
+  for k, potentialToMake in ipairs(potentialData) do
+    local potential = buildPotentialFromTable(potentialToMake)    
+    baseIssueFactory:addPotential(potential)
   end
 end
 
@@ -284,6 +295,11 @@ function revealNewIssues()
   
   issueView:removeAllChildren()
   issueLookup = {}
+
+  local maybe = baseIssueFactory:getValidIssue()
+  if maybe then
+    table.insert(issues, maybe)
+  end
 
   for k, faction in ipairs(factions) do
     faction:revealNewIssues()    

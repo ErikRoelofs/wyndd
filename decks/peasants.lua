@@ -6,6 +6,7 @@
   -- crop death (pests, draught, disease)
   -- banditry
   -- land disputes
+  -- not paying tax
 
 -- opportunities
   -- harvest feast
@@ -136,7 +137,9 @@ local potentials = {
       name = "Hefty taxation",
       needs = { {"might"}, {"might"} },
       gains = {{"standing", "peasants", -2}, {"resource", "wealth"}},
-      losses = {}
+      losses = {},
+      repeats = 4,
+      delayed = 3
     },
     validator = { "always" },
     faction = "peasants"
@@ -190,6 +193,18 @@ local potentials = {
       needs = { {"faith"}, {"wealth"} },
       gains = {{"score", 5}},
       losses = {{"power", "peasants", -1}, {"lose_resource", "food"}}
+    },
+    validator = { "seasonal", "spring" },
+    faction = "peasants"
+  },
+  {
+    identifier = "peasant_cropdeath2",
+    issue = {
+      type = "problem",
+      name = "Swarms of Locust",
+      needs = { {"faith"}, {"wealth"}, {"wealth"}, {"food"} },
+      gains = {{"score", 25}},
+      losses = {{"power", "peasants", -2}, {"lose_resource", "food"}, {"lose_resource", "food"}}
     },
     validator = { "AND", {{"rare"}, {"seasonal", "spring"} }},
     faction = "peasants"

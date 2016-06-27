@@ -102,6 +102,12 @@ function unique(name)
   end
 end
 
+function scoreValidator(score)
+  return function()
+    return score >= getScore()
+  end
+end
+
 function buildValidatorFromTable(validator)
   if validator[1] == "never" then
     return neverValidator
@@ -129,6 +135,8 @@ function buildValidatorFromTable(validator)
     return factionNotExists(validator[2])
   elseif validator[1] == "unique" then
     return unique(validator[2])
+  elseif validator[1] == "score" then
+    return scoreValidator(validator[2])
   else
     error("Unknown validator type: " .. validator[1])
   end

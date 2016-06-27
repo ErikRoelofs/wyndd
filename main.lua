@@ -51,6 +51,8 @@ function love.load()
     newResource("might"),    
     newResource("faith"),    
     newResource("official"),    
+    newResource("food"),
+    newResource("food"),
   }
   score = 0
   mouse = { x = 0, y = 0 }

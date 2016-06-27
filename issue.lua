@@ -29,6 +29,7 @@ function newIssue(issueType, name, needs, gains, losses, repeats, persistent, de
             end
           end
         end
+        self:cleanHungry()
       else
         if self.delayed > 1 then
           self.delayed = self.delayed - 1
@@ -41,7 +42,7 @@ function newIssue(issueType, name, needs, gains, losses, repeats, persistent, de
             end
           end
         end
-      end
+      end      
     end,
     metNeeds = function(self)
       local met = true
@@ -65,6 +66,19 @@ function newIssue(issueType, name, needs, gains, losses, repeats, persistent, de
         need.met = false
       end
       self.done = false
+    end,
+    cleanHungry = function(self)
+      for k, need in ipairs(self.needs) do
+        if need.hungry then
+          local notFound = true
+          for i, resource in ipairs(self.resources) do            
+            if notFound and resource.type == need.type then
+              notFound = false
+              table.remove(self.resources, i)              
+            end
+          end
+        end
+      end
     end,
     allNeedsNotMet = function(self)
       for k, need in ipairs(self.needs) do

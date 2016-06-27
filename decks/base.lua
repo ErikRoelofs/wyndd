@@ -35,6 +35,19 @@
   
 local potentials = {
   {
+    identifier = "base_population_growth",
+    issue = {
+      type = "opportunity",
+      name = "Expanding the population",
+      needs = {{"food", true}, {"food", true}},
+      gains = {{"score", 50}},
+      losses = {},      
+    },
+    validator = { "rare" },
+    faction = "base"
+  },
+
+  {
     identifier = "base_rise_of_dark_brotherhood",
     issue = {
       type = "opportunity",

@@ -116,10 +116,9 @@ function newGameOverReward()
   }
 end
 
-function newFlagReward(flag, flagStore)
+function newFlagReward(flag)
   return {
     flag = flag,
-    flagStore = flagStore,
     resolve = function(self)
       flags[flag] = true
     end,
@@ -153,7 +152,7 @@ function buildRewardFromTable(table)
   elseif table[1] == "lose_resource" then
     return newLoseResourceReward(table[2])
   elseif table[1] == "flag" then
-    return newFlagReward(table[2], table[3])  
+    return newFlagReward(table[2])  
   elseif table[1] == "faction" then
     return newFactionReward(table[2])  
   else

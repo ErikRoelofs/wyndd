@@ -57,7 +57,7 @@ function love.load()
   score = 0
   mouse = { x = 0, y = 0 }
   
-  scoreText = { value = "Score: " .. score }
+  scoreText = { value = "Score: " .. getScore() }
   currentTurnText = { value = getSeason() .. ", year " .. year }
   
   selectedResource = {}
@@ -150,7 +150,7 @@ function convertBase(potentialData)
 end
 
 function love.update(dt)  
-  scoreText.value = "Score: " .. score
+  scoreText.value = "Score: " .. getScore()
   currentTurnText.value = getSeason() .. ", year " .. year
   stackView:update(dt)
   if selectedResource.key then
@@ -410,4 +410,8 @@ function simplecopy(t)
     end
   end
   return new
+end
+
+function getScore()
+  return score
 end

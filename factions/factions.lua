@@ -50,7 +50,7 @@ local factions = {
     },
     {
       identifier = "thieves",
-      name = "Thieves' Guild",
+      name = "Dark Brotherhood",
       standing = 3,
       power = 3,
       initial = false

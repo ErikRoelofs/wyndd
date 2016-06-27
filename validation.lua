@@ -91,6 +91,17 @@ function factionNotExists(factionId)
     return not isFactionAvailable(factionId) end
 end
 
+function unique(name)
+  return function()
+    for k, issue in ipairs(issues) do
+      if issue.name == name then
+        return false
+      end
+    end
+    return true
+  end
+end
+
 function buildValidatorFromTable(validator)
   if validator[1] == "never" then
     return neverValidator
@@ -116,6 +127,8 @@ function buildValidatorFromTable(validator)
     return factionExists(validator[2])
   elseif validator[1] == "faction_not_exists" then
     return factionNotExists(validator[2])
+  elseif validator[1] == "unique" then
+    return unique(validator[2])
   else
     error("Unknown validator type: " .. validator[1])
   end

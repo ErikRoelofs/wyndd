@@ -35,16 +35,16 @@
   
 local potentials = {
   {
-    identifier = "base_example",
+    identifier = "base_rise_of_dark_brotherhood",
     issue = {
       type = "opportunity",
       name = "Example",
-      needs = { {"might"}, {"might"}, {"might"}, {"might"} },
-      gains = {{"power", "peasants", -3}},
-      losses = {{"game_end"}},
-      delayed = 3,
+      needs = {},
+      gains = {{"faction", "thieves"}},
+      losses = {},
+      repeats = 6,
     },
-    validator = { "always" },
+    validator = { "AND", {{"year", 1}, {"unique", "Example"}, {"faction_not_exists", "thieves"}}},
     faction = "base"
   },
 }

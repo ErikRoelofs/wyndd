@@ -43,14 +43,15 @@ return function(lc)
       
       local gainsBorder = {}
       local lossesBorder = {}
-      if options.metNeeds then
+      if options.metNeeds() then
         gainsBorder = { color = {255,255,255,255}, thickness = 2}
         lossesBorder = { color = {0,0,0,0}, thickness = 0}
       else
         gainsBorder = { color = {0,0,0,0}, thickness = 0}
         lossesBorder = { color = {255,255,255,255}, thickness = 2}        
       end
-      view:addChild(lc:build("text", {height="wrap", width="wrap", data = { value = "Gains: " }, border = gainsBorder, padding = lc.padding(5) }))
+      view.gainsHeader = lc:build("text", {height="wrap", width="wrap", data = { value = "Gains: " }, border = gainsBorder, padding = lc.padding(5) })
+      view:addChild(view.gainsHeader)
       
       local gainsView = lc:build("linear", {height="wrap", width="fill", direction="v", margin=lc.margin(0,0,0,5)})
       for k, gain in ipairs(options.gains ) do
@@ -58,7 +59,8 @@ return function(lc)
       end
       view:addChild(gainsView)
       
-      view:addChild(lc:build("text", {height="wrap", width="wrap", data = { value = "Losses: " }, border = lossesBorder, padding = lc.padding(5) }))
+      view.lossesHeader = lc:build("text", {height="wrap", width="wrap", data = { value = "Losses: " }, border = lossesBorder, padding = lc.padding(5) })
+      view:addChild(view.lossesHeader)
 
       local lossesView = lc:build("linear", {height="wrap", width="fill", direction="v", margin=lc.margin(0,0,0,5)})  
       for k, loss in ipairs(options.losses ) do
@@ -68,6 +70,24 @@ return function(lc)
       
       view:addChild(lc:build("text", {width="wrap", height="wrap",data = { value = timeInfo(options) } }))
       view:addChild(lc:build("indicator", {value = function() return options.metNeeds() end}))
+      
+      view.update = function(self, dt)
+        local gainsBorder = {}
+        local lossesBorder = {}
+        if options.metNeeds() then
+          gainsBorder = { color = {255,255,255,255}, thickness = 2}
+          lossesBorder = { color = {0,0,0,0}, thickness = 0}
+        else
+          gainsBorder = { color = {0,0,0,0}, thickness = 0}
+          lossesBorder = { color = {255,255,255,255}, thickness = 2}        
+        end
+        self.lossesHeader.border = lossesBorder
+        self.gainsHeader.border = gainsBorder
+        
+        for _, child in ipairs(self:getChildren()) do
+          child:update(dt)
+        end
+      end
       
       return view
     end,

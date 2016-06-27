@@ -1,6 +1,6 @@
 issueList = {}
 
-function newIssue(issueType, name, needs, gains, losses, repeats, persistent, delayed)  
+function newIssue(issueType, name, needs, gains, losses, repeats, persistent, delayed, continuous)  
   needs = simplecopy(needs)
   gains = simplecopy(gains)
   losses = simplecopy(losses)
@@ -14,6 +14,7 @@ function newIssue(issueType, name, needs, gains, losses, repeats, persistent, de
     repeats = repeats or 1,
     delayed = delayed or 1,
     persistent = persistent or false,
+    continuous = continuous or false,
     resources = {},
     resolve = function(self)
       if self:metNeeds() then
@@ -23,6 +24,9 @@ function newIssue(issueType, name, needs, gains, losses, repeats, persistent, de
         else
           for k, gain in ipairs(self.gains) do
             gain:resolve()
+            if self.continuous then
+              self:clean()
+            end
           end
         end
       else
@@ -118,7 +122,7 @@ function buildIssueFunctionFromTable(table)
     local losses = buildRewardsFromTable(table.losses)
     
     return function()
-      return newIssue(table.type, table.name, needs, gains, losses, table.repeats, table.persistent, table.delayed)
+      return newIssue(table.type, table.name, needs, gains, losses, table.repeats, table.persistent, table.delayed, table.continuous)
     end
 end
 

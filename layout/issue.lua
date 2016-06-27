@@ -13,6 +13,9 @@ local function timeInfo(issue)
   if issue.persistent then
     timeInfo = timeInfo .. " (P)"
   end
+  if issue.continuous then
+    timeInfo = timeInfo .. " (C)"
+  end
   return timeInfo
 end
 
@@ -111,8 +114,11 @@ return function(lc)
         delayed = {
           required = true,
           schemaType = "number"
-        }
-        
+        },
+        continuous = {
+          required = true,
+          schemaType = "boolean"
+        },        
       }
   }
 end

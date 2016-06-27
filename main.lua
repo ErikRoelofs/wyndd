@@ -101,6 +101,7 @@ function love.load()
   lc:register("resource", require "layout/resource"(lc))
   lc:register("indicator", require "layout/indicator"(lc))
   lc:register("faction", require "layout/faction"(lc))
+  lc:register("issuecompletion", require "layout/issuecompletion"(lc))
   
   stackView = lc:build("stackroot", {})
   root = lc:build("linear", {width = "fill", height="fill", direction="v"})

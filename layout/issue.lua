@@ -68,7 +68,20 @@ return function(lc)
       end
       view:addChild(lossesView)
       
-      view:addChild(lc:build("text", {width="wrap", height="wrap",data = { value = timeInfo(options) } }))
+      if options.maxRepeats > 1 or options.maxDelayed > 1 then
+        view:addChild(lc:build("issuecompletion", {width="wrap", height="wrap", 
+              successImage = "assets/check.png",
+              failureImage = "assets/cross.png",
+              emptyImage = "assets/empty.png",
+              targetImage = "assets/target.png",
+              successes = options.maxRepeats,
+              failures = options.maxDelayed,
+              currentSuccesses = function() return options.repeats end,
+              currentFailures = function() return options.delayed end,
+              backgroundColor = { 200, 200, 255, 255 },
+        }))
+      end
+      
       view:addChild(lc:build("indicator", {value = function() return options.metNeeds() end}))
       
       view.update = function(self, dt)
@@ -127,6 +140,10 @@ return function(lc)
           required = true,
           schemaType = "number"
         },
+        maxRepeats = {
+          required = true,
+          schemaType = "number"
+        },
         persistent = {
           required = true,
           schemaType = "boolean"
@@ -135,6 +152,10 @@ return function(lc)
           required = true,
           schemaType = "number"
         },
+        maxDelayed = {
+          required = true,
+          schemaType = "number"
+        },  
         continuous = {
           required = true,
           schemaType = "boolean"

@@ -11,15 +11,17 @@ function newIssue(issueType, name, needs, gains, losses, repeats, persistent, de
     needs = needs,
     gains = gains,
     losses = losses,
-    repeats = repeats or 1,
-    delayed = delayed or 1,
+    repeats = 0,
+    maxRepeats = repeats or 1,
+    delayed = 0,
+    maxDelayed = delayed or 1,
     persistent = persistent or false,
     continuous = continuous or false,
     resources = {},
     resolve = function(self)
       if self:metNeeds() then
-        if self.repeats > 1 then
-          self.repeats = self.repeats - 1
+        self.repeats = self.repeats + 1
+        if self.maxRepeats > self.repeats then          
           self:clean()
         else
           for k, gain in ipairs(self.gains) do
@@ -31,8 +33,8 @@ function newIssue(issueType, name, needs, gains, losses, repeats, persistent, de
         end
         self:cleanHungry()
       else
-        if self.delayed > 1 then
-          self.delayed = self.delayed - 1
+        self.delayed = self.delayed + 1
+        if self.maxDelayed > self.delayed then          
           self:clean()
         else
           for k, loss in ipairs(self.losses) do

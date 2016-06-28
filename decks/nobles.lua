@@ -2,4 +2,6 @@
 -- heritages
 -- new births
 -- marrying families
--- 
+-- assination
+-- incompetence and nepotism
+-- trapped by honour and rules

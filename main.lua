@@ -1,14 +1,12 @@
---[[
-  - create some factions with assigned decks
-  - build some issue decks
-  - define some resource types
+--[[  
+  - build some issue decks  
   - work on a proper UI, with scrolling probably < using renderer
+  - make multi-option issues a thing
   
   issues:
   - receiving multiple copies of certain issues at the same time is a problem (ie; "new faction" x2)
   
   - multi-resources
-  - allow viewing of complex types
   - create proper graphics
   - underlying issues that create story?
   - multi-faction related issues

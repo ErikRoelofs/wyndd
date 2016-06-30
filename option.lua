@@ -71,6 +71,9 @@ function newOption( name, needs, gains )
         r = r -1
       end
       self:allNeedsNotMet()      
+    end,
+    canSelect = function(self)
+      return true
     end
   }
 end
@@ -100,5 +103,12 @@ function buildIgnoreFromTable(ignore)
   }
   local option = buildOptionFromTable(options)
   option.shouldResolve = false
+  option.times = ignore.times
+  local oldResolve = option.resolve
+  option.resolve = function(self)
+    self.times = self.times - 1
+    oldResolve(self)
+  end
+  option.canSelect = function(self) return self.times > 0 end
   return option
 end

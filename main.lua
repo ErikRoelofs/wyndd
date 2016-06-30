@@ -363,6 +363,9 @@ end
 function cleanup()  
   cleanDoneIssues()
   cleanFactions()
+  for k, i in ipairs(issues) do
+    i:checkSelection()
+  end
 end
 
 function cleanFactions()

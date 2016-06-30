@@ -1,12 +1,12 @@
 issueList = {}
 
 function newIssue(issueType, name, options)  
-  
-  return {
+  options = simplecopy(options)
+  local issue = {
     type = issueType,
     name = name,
     options = options,
-    selected = 1,--#options,
+    selected = 1,
     resolve = function(self)
       local isDone = self.options[self.selected]:resolve()
       if not isDone then
@@ -24,6 +24,14 @@ function newIssue(issueType, name, options)
         self.selected = 1
       else
         self.selected = self.selected + 1        
+      end
+      if not self.options[self.selected]:canSelect() then
+        self:selectNextOption()
+      end
+    end,
+    checkSelection = function(self)
+      if not self.options[self.selected]:canSelect() then
+        self:selectNextOption()
       end      
     end,
     markDone = function(self)
@@ -37,6 +45,8 @@ function newIssue(issueType, name, options)
     end,
     done = false
   }
+  issue:checkSelection()
+  return issue
 end
 
 function newPotential(issueFunction, validator)

@@ -3,6 +3,7 @@ return function(lc)
     build = function (base, options)
       local container = lc:build("linear", {direction = "v", width = "wrap", height = "wrap", backgroundColor = {0,0,255,255}, padding = lc.padding(10)})
       
+      container.selectable = options.selectable
       container.highlighted = options.highlighted
       
       -- add the name
@@ -25,10 +26,14 @@ return function(lc)
       container:addChild(gainsView)
 
       container.update = function(self, dt)
-        if self:highlighted() then
-          self.border = { color =  {255,255,255,255}, thickness = 3 }
+        if self:selectable() then
+          if self:highlighted() then
+            self.border = { color =  {255,255,255,255}, thickness = 3 }
+          else
+            self.border= { color = {50,50,50,255}, thickness = 3 }
+          end
         else
-          self.border= { color = {50,50,50,255}, thickness = 3 }
+          self.border = { color =  {255,0,0,255}, thickness = 3 }
         end
         for _, child in ipairs(self:getChildren()) do
           child:update(dt)
@@ -70,6 +75,10 @@ return function(lc)
         highlighted = {
           required = true,
           schemaType = "function",
+        },
+        selectable = {
+          required = true,
+          schemaType = "function"
         }
       }
   }

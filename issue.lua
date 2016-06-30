@@ -1,13 +1,11 @@
 issueList = {}
 
-function newIssue(issueType, name, options, default, ignorable)  
+function newIssue(issueType, name, options)  
   
   return {
     type = issueType,
     name = name,
     options = options,
-    default = default,
-    ignorable = ignorable,
     resolve = function(self)
       if self:metNeeds() then
         self.repeats = self.repeats + 1
@@ -122,13 +120,15 @@ function buildPotentialFromTable(table)
   return newPotential(issueFunction, validator)
 end
 
-function buildIssueFunctionFromTable(table)      
-    local options = buildOptionsFromTable(table.options)
-    local default = buildDefaultFromTable(table.default)    
-    local ignore = buildIgnoreFromTable(table.ignorable or {})
+function buildIssueFunctionFromTable(issueTable)      
+    local options = buildOptionsFromTable(issueTable.options)
+    table.insert(options, buildDefaultFromTable(issueTable.default))
+    if issueTable.ignorable then
+      table.insert(options, buildIgnoreFromTable(issueTable.ignorable ))
+    end
     
     return function()
-      return newIssue(table.type, table.name, options, default, ignore)
+      return newIssue(issueTable.type, issueTable.name, options)
     end
 end
 

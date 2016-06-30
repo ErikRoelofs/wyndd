@@ -81,6 +81,7 @@ function buildIgnoreFromTable(ignore)
   local options = {
     name = "Ignore the issue",
     needs = {},
-    gains = ignore.gains or {}
+    gains = buildRewardsFromTable(ignore.gains or {})
   }
+  return options
 end

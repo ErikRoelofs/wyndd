@@ -294,10 +294,10 @@ end
 
 function resolveAllIssues()
   for _, issue in ipairs(issues) do
-    issue.done = true    
+    issue:markDone()
   end
   for _, issue in ipairs(issues) do
-    if issue.done == true then
+    if issue:isDone() then
       issue:resolve()
     end
   end
@@ -397,7 +397,7 @@ end
 function cleanDoneIssues()
   local i = #issues
   while i > 0 do
-    if issues[i].done then
+    if issues[i]:isDone() then
       table.remove(issues, i)
     end
     i = i - 1

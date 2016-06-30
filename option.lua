@@ -5,6 +5,7 @@ function newOption( name, needs, gains )
     name = name,
     needs = needs,
     gains = gains,
+    shouldResolve = true,
     resources = {},
     resolve = function(self)
       if self:metNeeds() then
@@ -15,6 +16,7 @@ function newOption( name, needs, gains )
       else
         error("Trying to resolve an option that was not met!")
       end
+      return self.shouldResolve
     end,
     metNeeds = function(self)
       local met = true
@@ -92,9 +94,11 @@ end
 
 function buildIgnoreFromTable(ignore)
   local options = {
-    name = "Ignore the issue",
+    name = ignore.name or "Ignore the issue",
     needs = {},
     gains = ignore.gains or {}
   }
-  return buildOptionFromTable(options)
+  local option = buildOptionFromTable(options)
+  option.shouldResolve = false
+  return option
 end

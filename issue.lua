@@ -8,7 +8,10 @@ function newIssue(issueType, name, options)
     options = options,
     selected = 1,--#options,
     resolve = function(self)
-      self.options[self.selected]:resolve()
+      local isDone = self.options[self.selected]:resolve()
+      if not isDone then
+        self:markNotDone()
+      end
     end,
     returnResources = function(self, allOfThem)
       self.options[self.selected]:returnResources(allOfThem)
@@ -22,7 +25,17 @@ function newIssue(issueType, name, options)
       else
         self.selected = self.selected + 1        
       end      
-    end
+    end,
+    markDone = function(self)
+      self.done = true
+    end,
+    markNotDone = function(self)
+      self.done = false
+    end,
+    isDone = function(self)
+      return self.done
+    end,
+    done = false
   }
 end
 

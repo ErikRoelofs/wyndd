@@ -6,74 +6,12 @@ function newIssue(issueType, name, options)
     type = issueType,
     name = name,
     options = options,
+    selected = #options,
     resolve = function(self)
-      if self:metNeeds() then
-        self.repeats = self.repeats + 1
-        if self.maxRepeats > self.repeats then          
-          self:clean()
-        else
-          for k, gain in ipairs(self.gains) do
-            gain:resolve()
-            if self.continuous then
-              self:clean()
-            end
-          end
-        end
-        self:cleanHungry()
-      else
-        self.delayed = self.delayed + 1
-        if self.maxDelayed > self.delayed then          
-          self:clean()
-        else
-          for k, loss in ipairs(self.losses) do
-            loss:resolve()
-            if self.persistent then
-              self:clean()
-            end
-          end
-        end
-      end      
+      self.options[self.selected]:resolve()
     end,
-    metNeeds = function(self)
-      local met = true
-      for k, need in ipairs(self.needs) do
-        met = met and (need.met or false)
-      end
-      return met
-    end,
-    give = function(self, resource)
-      for _, want in ipairs(self.needs) do
-        if not want.met and want.type == resource.type then
-          want.met = true          
-          table.insert(self.resources, resource)          
-          return true
-        end
-      end
-      return false
-    end,
-    clean = function(self)
-      for k, need in ipairs(self.needs) do
-        need.met = false
-      end
-      self.done = false
-    end,
-    cleanHungry = function(self)
-      for k, need in ipairs(self.needs) do
-        if need.hungry then
-          local notFound = true
-          for i, resource in ipairs(self.resources) do            
-            if notFound and resource.type == need.type then
-              notFound = false
-              table.remove(self.resources, i)              
-            end
-          end
-        end
-      end
-    end,
-    allNeedsNotMet = function(self)
-      for k, need in ipairs(self.needs) do
-        need.met = false
-      end      
+    returnResources = function(self, allOfThem)
+      self.options[self.selected]:returnResources(allOfThem)
     end
   }
 end

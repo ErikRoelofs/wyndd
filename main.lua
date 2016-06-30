@@ -323,17 +323,7 @@ function returnAllResources(evenConsumables)
   resourceView:removeAllChildren()
   
   for i, issue in ipairs(issues) do
-    local r = #issue.resources
-    while r > 0 do
-      local resource = issue.resources[r]
-      if evenConsumables or not resource.consumable then
-        resource.used = false
-        table.insert(resources, resource)
-      end
-      table.remove(issue.resources, r)
-      r = r -1
-    end
-    issue:allNeedsNotMet()
+    issue:returnResources(evenConsumables)
   end
   
   for k, r in ipairs(resources) do

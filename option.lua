@@ -56,6 +56,19 @@ function newOption( name, needs, gains )
       for k, need in ipairs(self.needs) do
         need.met = false
       end      
+    end,
+    returnResources = function(self, allOfThem)
+      local r = #self.resources
+      while r > 0 do
+        local resource = self.resources[r]
+        if allOfThem or not resource.consumable then
+          resource.used = false
+          table.insert(resources, resource)
+        end
+        table.remove(self.resources, r)
+        r = r -1
+      end
+      self:allNeedsNotMet()      
     end
   }
 end
@@ -81,7 +94,7 @@ function buildIgnoreFromTable(ignore)
   local options = {
     name = "Ignore the issue",
     needs = {},
-    gains = buildRewardsFromTable(ignore.gains or {})
+    gains = ignore.gains or {}
   }
-  return options
+  return buildOptionFromTable(options)
 end

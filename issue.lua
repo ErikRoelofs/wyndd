@@ -6,12 +6,15 @@ function newIssue(issueType, name, options)
     type = issueType,
     name = name,
     options = options,
-    selected = #options,
+    selected = 1,--#options,
     resolve = function(self)
       self.options[self.selected]:resolve()
     end,
     returnResources = function(self, allOfThem)
       self.options[self.selected]:returnResources(allOfThem)
+    end,
+    give = function(self, resource)
+      return self.options[self.selected]:give(resource)
     end
   }
 end

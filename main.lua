@@ -23,6 +23,7 @@ require "reward"
 require "issue"
 require "faction"
 require "validation"
+require "option"
 
 function love.load()
     
@@ -86,9 +87,9 @@ function love.load()
     return availableFactions[id]
   end
   
-  convert( require "decks/peasants" )
-  convert( require "decks/guilds" )
-  convert( require "decks/priests" )
+  --convert( require "decks/peasants" )
+  --convert( require "decks/guilds" )
+  --convert( require "decks/priests" )
   convertBase( require "decks/base" )
   
 
@@ -100,6 +101,7 @@ function love.load()
   lc:register("indicator", require "layout/indicator"(lc))
   lc:register("faction", require "layout/faction"(lc))
   lc:register("issuecompletion", require "layout/issuecompletion"(lc))
+  lc:register("option", require "layout/option"(lc))
   
   stackView = lc:build("stackroot", {})
   root = lc:build("linear", {width = "fill", height="fill", direction="v"})

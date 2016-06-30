@@ -39,6 +39,32 @@ local potentials = {
     issue = {
       type = "opportunity",
       name = "Expanding the population",
+      options = {
+        {
+          name = "Give out the food, grow the populace",
+          needs = {{"food", true}, {"food", true}},
+          gains = {{"score", 100}},
+        }
+      },      
+      default = {
+        name = "No food for you.",
+        gains = {}
+      },
+      ignorable = {
+        times = 3,
+        gains = {{"score", -1}}
+      }
+    },
+    validator = { "always" },
+    faction = "base"
+  },
+
+  --[[
+  {
+    identifier = "base_population_growth",
+    issue = {
+      type = "opportunity",
+      name = "Expanding the population",
       needs = {{"food", true}, {"food", true}},
       gains = {{"score", 100}},
       losses = {},      
@@ -121,7 +147,7 @@ local potentials = {
     validator = { "AND", {{"year", 8}, {"unique", "A plague in the east"}, {"flag_not_set", "plague"}}},
     faction = "base"
   },
-  
+  ]]
 }
 
 return potentials

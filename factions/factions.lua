@@ -18,21 +18,21 @@ local factions = {
       name = "Peasants",
       standing = 5,
       power = 5,
-      initial = true,
+      initial = false,
     },
     {
       identifier = "guilds",
       name = "Guilds",
       standing = 5,
       power = 5,
-      initial = true,
+      initial = false,
     },
     {
       identifier = "priests",
       name = "Priests",
       standing = 5,
       power = 5,
-      initial = true
+      initial = false
     },
     {
       identifier = "nobles",

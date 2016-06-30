@@ -1,23 +1,13 @@
 issueList = {}
 
-function newIssue(issueType, name, needs, gains, losses, repeats, persistent, delayed, continuous)  
-  needs = simplecopy(needs)
-  gains = simplecopy(gains)
-  losses = simplecopy(losses)
+function newIssue(issueType, name, options, default, ignorable)  
   
   return {
     type = issueType,
     name = name,
-    needs = needs,
-    gains = gains,
-    losses = losses,
-    repeats = 0,
-    maxRepeats = repeats or 1,
-    delayed = 0,
-    maxDelayed = delayed or 1,
-    persistent = persistent or false,
-    continuous = continuous or false,
-    resources = {},
+    options = options,
+    default = default,
+    ignorable = ignorable,
     resolve = function(self)
       if self:metNeeds() then
         self.repeats = self.repeats + 1
@@ -133,12 +123,12 @@ function buildPotentialFromTable(table)
 end
 
 function buildIssueFunctionFromTable(table)      
-    local needs = buildNeedsFromTable(table.needs)
-    local gains = buildRewardsFromTable(table.gains)
-    local losses = buildRewardsFromTable(table.losses)
+    local options = buildOptionsFromTable(table.options)
+    local default = buildDefaultFromTable(table.default)    
+    local ignore = buildIgnoreFromTable(table.ignorable or {})
     
     return function()
-      return newIssue(table.type, table.name, needs, gains, losses, table.repeats, table.persistent, table.delayed, table.continuous)
+      return newIssue(table.type, table.name, options, default, ignore)
     end
 end
 

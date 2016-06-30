@@ -12,15 +12,21 @@ return function(lc)
       
       view:addChild(lc:build("text", {height="wrap", width="wrap", data = { value = options.name }, padding = lc.padding(5) }))
       
-      for _, option in ipairs(options.options) do
-        local toPass = {
+      local selected = options.selected
+      
+      for key, option in ipairs(options.options) do
+        local myKey = key
+        local selectedFn = function() return myKey == selected() end
+              
+        local toPass = {          
           name = option.name,
           needs = option.needs,
-          gains = option.gains
+          gains = option.gains,
+          highlighted = selectedFn
         }
         view:addChild(lc:build("option", toPass))
       end
-      
+            
       return view
     end,
     schema = 
@@ -28,6 +34,8 @@ return function(lc)
         type = { required = true, schemaType = "fromList", list = { "problem", "opportunity" }},
         name = { required = true, schemaType = "string" },
         options = {},
+        selected = { required = true, schemaType = "function" }
       }
+      
   }
 end

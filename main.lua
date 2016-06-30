@@ -223,6 +223,16 @@ function love.mousepressed(x, y, button)
     end
   end
   
+  if not selectedResource.key then
+    for k, v in ipairs(list) do
+      if issueLookup[v] then
+        issueLookup[v]:returnResources(true)
+        redrawResources()
+        issueLookup[v]:selectNextOption()        
+      end
+    end
+  end
+  
   for k, v in ipairs(list) do
     if v == endTurnButton then
       endTheTurn()
@@ -319,12 +329,16 @@ end
 function returnAllResources(evenConsumables)
   evenConsumables = evenConsumables or false
   
-  resourceLookup = {}
-  resourceView:removeAllChildren()
-  
   for i, issue in ipairs(issues) do
     issue:returnResources(evenConsumables)
   end
+  redrawResources()
+  
+end
+
+function redrawResources()
+  resourceLookup = {}
+  resourceView:removeAllChildren()
   
   for k, r in ipairs(resources) do
     local child = lc:build("resource", r)

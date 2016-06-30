@@ -1,7 +1,9 @@
 return function(lc)
   return {
     build = function (base, options)
-      local container = lc:build("linear", {direction = "v", width = "wrap", height = "wrap", backgroundColor = {0,0,255,255}, border = { color = {255,255,255,255}, thickness = 3}, padding = lc.padding(10)})
+      local container = lc:build("linear", {direction = "v", width = "wrap", height = "wrap", backgroundColor = {0,0,255,255}, padding = lc.padding(10)})
+      
+      container.highlighted = options.highlighted
       
       -- add the name
       container:addChild( lc:build( "text", {data = function() return options.name end, width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}, padding = lc.padding(5) }) )
@@ -21,6 +23,18 @@ return function(lc)
         gainsView:addChild(gain:getView())
       end
       container:addChild(gainsView)
+
+      container.update = function(self, dt)
+        if self:highlighted() then
+          self.border = { color =  {255,255,255,255}, thickness = 3 }
+        else
+          self.border= { color = {50,50,50,255}, thickness = 3 }
+        end
+        for _, child in ipairs(self:getChildren()) do
+          child:update(dt)
+        end
+      end
+
 
       return container
     end,
@@ -53,6 +67,10 @@ return function(lc)
           }
         },
         gains = {},
+        highlighted = {
+          required = true,
+          schemaType = "function",
+        }
       }
   }
 end

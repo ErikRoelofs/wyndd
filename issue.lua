@@ -15,6 +15,13 @@ function newIssue(issueType, name, options)
     end,
     give = function(self, resource)
       return self.options[self.selected]:give(resource)
+    end,
+    selectNextOption = function(self)
+      if self.selected == #self.options then
+        self.selected = 1
+      else
+        self.selected = self.selected + 1        
+      end      
     end
   }
 end

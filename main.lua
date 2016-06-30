@@ -170,7 +170,9 @@ end
 
 function love.keypressed(key, scancode)
   if key == "q" and not gameOver then
-    endTheTurn()
+    if canEndTheTurn() then
+      endTheTurn()
+    end
   end
 end
 
@@ -290,6 +292,14 @@ function endTheTurn()
   revealNewIssues()
   backToAssignPhase()
   
+end
+
+function canEndTheTurn()
+  local canEnd = true
+  for k, i in ipairs(issues) do
+    canEnd = canEnd and i:canResolve()
+  end
+  return canEnd
 end
 
 function resolveAllIssues()

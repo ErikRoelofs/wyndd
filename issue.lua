@@ -13,6 +13,9 @@ function newIssue(issueType, name, options)
         self:markNotDone()
       end
     end,
+    canResolve = function(self)
+      return self.options[self.selected]:metNeeds()
+    end,
     returnResources = function(self, allOfThem)
       self.options[self.selected]:returnResources(allOfThem)
     end,

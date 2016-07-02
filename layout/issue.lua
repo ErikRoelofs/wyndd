@@ -23,6 +23,8 @@ return function(lc)
           needs = option.needs,
           gains = option.gains,
           highlighted = selectedFn,
+          times = option.times,
+          maxTimes = option.startTimes,
           selectable = function() return option:canSelect() end
         }
         view:addChild(lc:build("option", toPass))

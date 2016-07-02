@@ -6,6 +6,7 @@ function newOption( name, needs, gains, times, payoutEnd )
     needs = needs,
     gains = gains,    
     times = times or 1,
+    startTimes = times or 1,
     payoutEnd = payoutEnd or true,
     shouldResolve = true,
     resources = {},
@@ -62,7 +63,9 @@ function newOption( name, needs, gains, times, payoutEnd )
       end      
     end,
     returnResources = function(self, allOfThem)
-      self:cleanHungry()
+      if not allOfThem then
+        self:cleanHungry()
+      end
       local r = #self.resources
       while r > 0 do
         local resource = self.resources[r]

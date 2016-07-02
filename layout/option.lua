@@ -25,6 +25,9 @@ return function(lc)
       end
       container:addChild(gainsView)
 
+      container:addChild(lc:build("text", {height="wrap", width="wrap", data = function() return options.times .. "/" .. options.maxTimes end }))
+
+
       container.update = function(self, dt)
         if self:selectable() then
           if self:highlighted() then
@@ -79,7 +82,15 @@ return function(lc)
         selectable = {
           required = true,
           schemaType = "function"
-        }
+        },
+        times = {
+          required = true,
+          schemaType = "number"
+        },
+        maxTimes = {
+          required = true,
+          schemaType = "number"
+        }        
       }
   }
 end

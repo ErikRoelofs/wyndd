@@ -1,22 +1,24 @@
-function newOption( name, needs, gains )
+function newOption( name, needs, gains, times, payoutEnd )
   needs = simplecopy(needs)
   gains = simplecopy(gains)
   return {
     name = name,
     needs = needs,
-    gains = gains,
+    gains = gains,    
+    times = times or 1,
+    payoutEnd = payoutEnd or true,
     shouldResolve = true,
     resources = {},
     resolve = function(self)
-      if self:metNeeds() then
-        self:clean()
+      assert( self:metNeeds(), "Trying to resolve an option that was not met!")
+      self:clean()     
+      self.times = self.times - 1
+      if self.times == 0 or not self.payoutEnd then
         for k, gain in ipairs(self.gains) do
           gain:resolve()
         end
-      else
-        error("Trying to resolve an option that was not met!")
       end
-      return self.shouldResolve
+      return self.times == 0 and self.shouldResolve
     end,
     metNeeds = function(self)
       local met = true
@@ -60,6 +62,7 @@ function newOption( name, needs, gains )
       end      
     end,
     returnResources = function(self, allOfThem)
+      self:cleanHungry()
       local r = #self.resources
       while r > 0 do
         local resource = self.resources[r]
@@ -87,7 +90,7 @@ function buildOptionsFromTable(options)
 end
 
 function buildOptionFromTable(option)  
-  return newOption(option.name, buildNeedsFromTable(option.needs), buildRewardsFromTable(option.gains))
+  return newOption(option.name, buildNeedsFromTable(option.needs), buildRewardsFromTable(option.gains), option.times)
 end
 
 function buildDefaultFromTable(default)
@@ -99,16 +102,11 @@ function buildIgnoreFromTable(ignore)
   local options = {
     name = ignore.name or "Ignore the issue",
     needs = {},
-    gains = ignore.gains or {}
+    gains = ignore.gains or {},
+    times = ignore.times
   }
   local option = buildOptionFromTable(options)
   option.shouldResolve = false
-  option.times = ignore.times
-  local oldResolve = option.resolve
-  option.resolve = function(self)
-    self.times = self.times - 1
-    oldResolve(self)
-  end
   option.canSelect = function(self) return self.times > 0 end
   return option
 end

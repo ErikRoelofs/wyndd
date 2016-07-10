@@ -95,13 +95,15 @@ function love.load()
 
   gameOver = false
   
-  lc:register("issue", require "layout/issue"(lc))
-  lc:register("need", require "layout/need"(lc))
-  lc:register("resource", require "layout/resource"(lc))
-  lc:register("indicator", require "layout/indicator"(lc))
-  lc:register("faction", require "layout/faction"(lc))
-  lc:register("issuecompletion", require "layout/issuecompletion"(lc))
-  lc:register("option", require "layout/option"(lc))
+  lc:registerLayout("issue", require "layout/issue"(lc))
+  lc:registerLayout("need", require "layout/need"(lc))
+  lc:registerLayout("resource", require "layout/resource"(lc))
+  lc:registerLayout("indicator", require "layout/indicator"(lc))
+  lc:registerLayout("faction", require "layout/faction"(lc))
+  lc:registerLayout("issuecompletion", require "layout/issuecompletion"(lc))
+  lc:registerLayout("option", require "layout/option"(lc))
+  
+  lc:registerValidator("free", function() end)
   
   stackView = lc:build("stackroot", {})
   root = lc:build("linear", {width = "fill", height="fill", direction="v"})
@@ -214,7 +216,7 @@ function love.mousepressed(x, y, button)
     for k, v in ipairs(list) do
       if issueLookup[v] then
         local issue = issueLookup[v]
-        if issue:give(selectedResource.resource) then          
+        if issue:give(selectedResource.resource) then
           table.remove( resources, selectedResource.key )
           dragbox:removeChild(selectedResource.view)
           selectedResource.resource.used = true
@@ -225,6 +227,7 @@ function love.mousepressed(x, y, button)
     end
   end
   
+  --[[
   if not selectedResource.key then
     for k, v in ipairs(list) do
       if issueLookup[v] then
@@ -234,6 +237,9 @@ function love.mousepressed(x, y, button)
       end
     end
   end
+  ]]
+  
+  stackView:receiveSignal("leftclick", {x = mouse.x, y = mouse.y })
   
   for k, v in ipairs(list) do
     if v == endTurnButton then

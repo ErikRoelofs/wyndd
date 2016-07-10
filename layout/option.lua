@@ -3,15 +3,16 @@ return function(lc)
     build = function (base, options)
       local container = lc:build("linear", {direction = "v", width = "wrap", height = "wrap", backgroundColor = {0,0,255,255}, padding = lc.padding(10)})
       
-      container.selectable = options.selectable
+      container.option = options.option
+      container.selectable = function() return options.option:canSelect() end
       container.highlighted = options.highlighted
       
       -- add the name
-      container:addChild( lc:build( "text", {data = function() return options.name end, width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}, padding = lc.padding(5) }) )
+      container:addChild( lc:build( "text", {data = function() return options.option.name end, width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}, padding = lc.padding(5) }) )
       
       -- add the needs
       local needsView = lc:build("linear", {height="wrap", width="fill", direction="h"})
-      for k, need in ipairs(options.needs) do
+      for k, need in ipairs(options.option.needs) do
         needsView:addChild(lc:build("need", need))
       end
       container:addChild(needsView)
@@ -20,13 +21,12 @@ return function(lc)
       container:addChild(lc:build("text", {height="wrap", width="wrap", data = { value = "Gains: " }, padding = lc.padding(5) }))
       
       local gainsView = lc:build("linear", {height="wrap", width="fill", direction="v", margin=lc.margin(0,0,0,5)})
-      for k, gain in ipairs(options.gains ) do
+      for k, gain in ipairs(options.option.gains ) do
         gainsView:addChild(gain:getView())
       end
       container:addChild(gainsView)
 
-      container:addChild(lc:build("text", {height="wrap", width="wrap", data = function() return options.times .. "/" .. options.maxTimes end }))
-
+      container:addChild(lc:build("text", {height="wrap", width="wrap", data = function() return options.option.times .. "/" .. options.option.startTimes end }))
 
       container.update = function(self, dt)
         if self:selectable() then
@@ -43,9 +43,26 @@ return function(lc)
         end
       end
 
+      container.receiveSignal = function(self, signal, payload)
+        if signal == "leftclick" then
+          -- respond that we are selected
+          self:messageOut("selected", { option = container.option } )
+        end
+      end
 
       return container
     end,
+    schema = {
+      option = {
+        required = true,
+        schemaType = "free"
+      },
+      highlighted = {
+        required = true,
+        schemaType = "function"
+      }
+    }
+    --[[
     schema = 
       { 
         name = {
@@ -74,7 +91,7 @@ return function(lc)
             }
           }
         },
-        gains = {},
+        gains = {required = true, schemaType = "free" },
         highlighted = {
           required = true,
           schemaType = "function",
@@ -92,5 +109,6 @@ return function(lc)
           schemaType = "number"
         }        
       }
+      ]]
   }
 end

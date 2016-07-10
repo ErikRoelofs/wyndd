@@ -32,6 +32,13 @@ function newIssue(issueType, name, options)
         self:selectNextOption()
       end
     end,
+    selectOption = function(self, option)
+      for i, opt in ipairs(self.options) do
+        if opt == option then
+          self.selected = i
+        end
+      end
+    end,
     checkSelection = function(self)
       if not self.options[self.selected]:canSelect() then
         self:selectNextOption()

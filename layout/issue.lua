@@ -20,23 +20,10 @@ return function(lc)
         local myKey = key
         local selectedFn = function() return myKey == selected() end                    
         view:addChild(lc:build("option", { option = option, highlighted = selectedFn }))
-      end
-            
-      view.receiveSignal = function( self, signal, payload )
-        if signal == "leftclick" then
-          
-          local other = self:clickedViews(payload.x, payload.y)
-          for i, v in ipairs(other) do
-            if v ~= self and self.scaffold[v] then
-              local offsetX, offsetY = self:getLocationOffset(v)
-              local thisPayload = { x = payload.x - offsetX , y = payload.y - offsetY }
-              v:receiveSignal(signal, thisPayload)
-            end
-          end                    
-        end
-        if signal == "selected" then
-          self.issue:selectOption(payload.option)
-        end
+      end        
+      
+      view.signalHandlers.selected = function(self, signal, payload)
+        self.issue:selectOption(payload.option)
       end
             
       return view

@@ -26,7 +26,7 @@ require "validation"
 require "option"
 
 function love.load()
-    
+        
   seasons = { "spring", "summer", "autumn", "winter" }  
   year = 0
   currentSeason = 1
@@ -115,9 +115,9 @@ function love.load()
   layout:addChild(score)
   local turn = lc:build("text", {width = 200, height = "fill", data = currentTurnText, textColor = {255,255,255,255}, padding = lc.padding(5,5,5,5)})
   layout:addChild(turn)
-  endTurnButton = lc:build("text", {width=200, height="fill", data = function() return "End the turn" end, backgroundColor = { 100, 100, 100, 255 }, border = { color = { 125, 125, 125, 255 }, thickness = 2 }, gravity = {"center", "center"}})
+  endTurnButton = lc:build("text", {width=200, height="fill", data = function() return "End the turn" end, backgroundColor = { 100, 100, 100, 255 }, border = { color = { 125, 125, 125, 255 }, thickness = 2 }, gravity = {"center", "center"}, signalHandlers = { leftclick = function() endTheTurn() end } } )
   layout:addChild(endTurnButton)
-  returnResourcesButton = lc:build("text", {width=200, height="fill", data = function() return "Return resources" end, backgroundColor = { 100, 100, 100, 255 }, border = { color = { 125, 125, 125, 255 }, thickness = 2 }, gravity = {"center", "center"}})
+  returnResourcesButton = lc:build("text", {width=200, height="fill", data = function() return "Return resources" end, backgroundColor = { 100, 100, 100, 255 }, border = { color = { 125, 125, 125, 255 }, thickness = 2 }, gravity = {"center", "center"}, signalHandlers = { leftclick = function() returnAllResources(true) end } })
   layout:addChild(returnResourcesButton)
   
   issueView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {100,200,50,100}, padding = lc.padding(5), weight=2})
@@ -171,10 +171,8 @@ function love.draw(dt)
 end
 
 function love.keypressed(key, scancode)
-  if key == "q" and not gameOver then
-    if canEndTheTurn() then
-      endTheTurn()
-    end
+  if key == "q" and not gameOver then    
+    endTheTurn()
   end
 end
 
@@ -184,8 +182,7 @@ function dropit()
   selectedResource = {}  
 end
 
-function love.mousepressed(x, y, button)
-  
+function love.mousepressed(x, y, button)  
   
   mouse.x = x
   mouse.y = y
@@ -227,36 +224,8 @@ function love.mousepressed(x, y, button)
     end
   end
   
-  --[[
-  if not selectedResource.key then
-    for k, v in ipairs(list) do
-      if issueLookup[v] then
-        issueLookup[v]:returnResources(true)
-        redrawResources()
-        issueLookup[v]:selectNextOption()        
-      end
-    end
-  end
-  ]]
-  
   stackView:receiveSignal("leftclick", {x = mouse.x, y = mouse.y })
   
-  for k, v in ipairs(list) do
-    if v == endTurnButton then
-      endTheTurn()
-      return
-    end
-  end
-
-  for k, v in ipairs(list) do
-    if v == returnResourcesButton then
-      returnAllResources(true)
-      return
-    end
-  end
-
-
-
   if selectedResource.key then
     dropit()
     return
@@ -284,6 +253,9 @@ function nextSeason()
 end
 
 function endTheTurn()
+  if not canEndTheTurn() then 
+    return
+  end
   if selectedResource.key then
     dropit()
   end

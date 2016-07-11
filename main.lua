@@ -121,7 +121,26 @@ function love.load()
   layout:addChild(returnResourcesButton)
   
   issueView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {100,200,50,100}, padding = lc.padding(5), weight=2})
-  resourceView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {95,195,45,100}, padding = lc.padding(5)})
+  
+  resourceView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {95,195,45,100}, padding = lc.padding(5) })
+  
+  resourceView.signalHandlers.leftclick = function(self, signal, payload)
+    local other = self:clickedViews(payload.x, payload.y)
+    for i, v in ipairs(other) do
+      if v ~= self and self.scaffold[v] then
+        local offsetX, offsetY = self:getLocationOffset(v)
+        local thisPayload = { x = payload.x - offsetX , y = payload.y - offsetY }        
+        self:messageOut("resource_view_requesting_pickup", { view = v })
+      end
+    end
+  end
+  resourceView.signalHandlers.view_picked_up = function(self, signal, payload)
+    self:removeChild(payload.view)
+  end
+  resourceView.signalHandlers.view_returned = function(self, signal, payload)
+    self:addChild(payload.view)
+  end
+  
   factionView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {90,190,40,100}, padding = lc.padding(5)})
   
   root:addChild(layout)
@@ -130,6 +149,19 @@ function love.load()
   root:addChild(factionView)
   
   dragbox = lc:build("dragbox", {width="fill", height="fill"})
+  table.insert(resourceView.outside, dragbox)
+  table.insert(dragbox.outside, resourceView)
+  dragbox.signalHandlers.resource_view_requesting_pickup = function( self, signal, payload )
+    print("A view is requesting pickup")
+    if dragbox:getChild(1) then
+      self:messageOut("view_returned", { view = dragbox:getChild(1) })
+      dragbox:removeChild(dragbox:getChild(1))
+    end      
+    dragbox:addChild(payload.view)
+    self:messageOut("view_picked_up", { view = payload.view })
+  end
+  
+  
   stackView:addChild(dragbox)
   
   stackView:layoutingPass()
@@ -155,9 +187,7 @@ function love.update(dt)
   scoreText.value = "Score: " .. getScore()
   currentTurnText.value = getSeason() .. ", year " .. year
   stackView:update(dt)
-  if selectedResource.key then
-    dragbox.offset = { love.mouse.getX(), love.mouse.getY() }
-  end
+  dragbox.offset = { love.mouse.getX(), love.mouse.getY() }  
 end
 
 function love.draw(dt)
@@ -188,27 +218,7 @@ function love.mousepressed(x, y, button)
   mouse.y = y
       
   local list = root:clickedViews(x,y)
-  for k, v in ipairs(list) do
-    if resourceLookup[v] then
-      if not resourceLookup[v].resource.used then
-        if selectedResource.key then
-          dropit()
-        end
-        
-        local selected = resourceLookup[v]
-        for k, v in ipairs(resources) do
-          if v == selected.resource then
-            selected.key = k
-          end
-        end
-        selectedResource = selected
-        resourceView:removeChild(v)
-        dragbox:addChild(v)
-        return
-      end
-    end
-  end
-
+  
   if selectedResource.key then
     for k, v in ipairs(list) do
       if issueLookup[v] then

@@ -115,7 +115,7 @@ function love.load()
   layout:addChild(score)
   local turn = lc:build("text", {width = 200, height = "fill", data = currentTurnText, textColor = {255,255,255,255}, padding = lc.padding(5,5,5,5)})
   layout:addChild(turn)
-  endTurnButton = lc:build("text", {width=200, height="fill", data = function() return "End the turn" end, backgroundColor = { 100, 100, 100, 255 }, border = { color = { 125, 125, 125, 255 }, thickness = 2 }, gravity = {"center", "center"}, signalHandlers = { leftclick = function() endTheTurn() end } } )
+  endTurnButton = lc:build("text", {width=200, height="fill", data = function() return "End the turn" end, backgroundColor = { 100, 100, 100, 255 }, border = { color = { 125, 125, 125, 255 }, thickness = 2 }, gravity = {"center", "center"}, signalHandlers = { leftclick = function(self, signal, payload) self:messageOut("turn_is_ending", {}) endTheTurn() end } } )
   layout:addChild(endTurnButton)
   returnResourcesButton = lc:build("text", {width=200, height="fill", data = function() return "Return resources" end, backgroundColor = { 100, 100, 100, 255 }, border = { color = { 125, 125, 125, 255 }, thickness = 2 }, gravity = {"center", "center"}, signalHandlers = { leftclick = function() returnAllResources(true) end } })
   layout:addChild(returnResourcesButton)
@@ -151,8 +151,8 @@ function love.load()
   dragbox = lc:build("dragbox", {width="fill", height="fill"})
   table.insert(resourceView.outside, dragbox)
   table.insert(dragbox.outside, resourceView)
-  dragbox.signalHandlers.resource_view_requesting_pickup = function( self, signal, payload )
-    print("A view is requesting pickup")
+  table.insert(endTurnButton.outside, dragbox)
+  dragbox.signalHandlers.resource_view_requesting_pickup = function( self, signal, payload )    
     if dragbox:getChild(1) then
       self:messageOut("view_returned", { view = dragbox:getChild(1) })
       dragbox:removeChild(dragbox:getChild(1))
@@ -160,7 +160,12 @@ function love.load()
     dragbox:addChild(payload.view)
     self:messageOut("view_picked_up", { view = payload.view })
   end
-  
+  dragbox.signalHandlers.turn_is_ending = function( self, signal, payload )
+    if dragbox:getChild(1) then
+      self:messageOut("view_returned", { view = dragbox:getChild(1) })
+      dragbox:removeChild(dragbox:getChild(1))
+    end
+  end
   
   stackView:addChild(dragbox)
   

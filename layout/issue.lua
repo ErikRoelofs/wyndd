@@ -18,29 +18,21 @@ return function(lc)
       
       for key, option in ipairs(options.issue.options) do
         local myKey = key
-        local selectedFn = function() return myKey == selected() end
-              
-        --[[
-        local toPass = {          
-          name = option.name,
-          needs = option.needs,
-          gains = option.gains,
-          highlighted = selectedFn,
-          times = option.times,
-          maxTimes = option.startTimes,
-          selectable = function() return option:canSelect() end
-        }
-        ]]
+        local selectedFn = function() return myKey == selected() end                    
         view:addChild(lc:build("option", { option = option, highlighted = selectedFn }))
       end
             
       view.receiveSignal = function( self, signal, payload )
         if signal == "leftclick" then
-          -- hmm. going to have to implement this.
-          self:clickedViews(payload.x, payload.y)
           
-          
-          self:signalChildren(signal, payload)
+          local other = self:clickedViews(payload.x, payload.y)
+          for i, v in ipairs(other) do
+            if v ~= self and self.scaffold[v] then
+              local offsetX, offsetY = self:getLocationOffset(v)
+              local thisPayload = { x = payload.x - offsetX , y = payload.y - offsetY }
+              v:receiveSignal(signal, thisPayload)
+            end
+          end                    
         end
         if signal == "selected" then
           self.issue:selectOption(payload.option)

@@ -43,11 +43,12 @@ return function(lc)
         end
       end
 
-      container.receiveSignal = function(self, signal, payload)
-        if signal == "leftclick" then
-          -- respond that we are selected
-          self:messageOut("selected", { option = container.option } )
-        end
+      container.signalHandlers.leftclick = function(self, signal, payload)
+        self:messageOut("selected", { option = container.option } )
+      end
+
+      container.signalHandlers.unselected = function(self, signal, payload)
+        print("I was unselected :(")
       end
 
       return container

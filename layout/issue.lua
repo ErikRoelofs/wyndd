@@ -23,8 +23,20 @@ return function(lc)
       end        
       
       view.signalHandlers.selected = function(self, signal, payload)
+        self.children[self.issue.selected + 1]:receiveSignal("unselected", {})
         self.issue:selectOption(payload.option)
       end
+      view.signalHandlers.resource_requesting_drop = function(self, signal, payload)        
+        if self.issue:give(payload.resource) then
+          payload.resource.used = true
+          for i, r in ipairs(resources) do
+            if r == payload.resource then
+              table.remove(resources, i)
+            end
+          end          
+          self:messageOut("accept_resource_drop", {})
+        end
+      end      
             
       return view
     end,

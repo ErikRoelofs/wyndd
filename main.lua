@@ -108,6 +108,14 @@ function love.load()
   stackView = lc:build("stackroot", {})
   root = lc:build("linear", {width = "fill", height="fill", direction="v"})
   stackView:addChild(root)
+  root.signalHandlers.resource_requesting_drop = function(self, signal, payload)
+    self:signalChildren(signal, payload)
+  end
+
+
+  stackView.signalHandlers.resource_requesting_drop = function(self, signal, payload)
+    self:signalChildren(signal, payload)
+  end
   
   local layout = lc:build("linear", {width = "fill", height = 25, backgroundColor = {105,205,55,100}, direction = "h"})
   
@@ -121,6 +129,19 @@ function love.load()
   layout:addChild(returnResourcesButton)
   
   issueView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {100,200,50,100}, padding = lc.padding(5), weight=2})
+  issueView.signalHandlers.resource_requesting_drop = function(self, signal, payload) 
+    local other = self:clickedViews(payload.x, payload.y)
+    for i, v in ipairs(other) do
+      if v ~= self and self.scaffold[v] then
+        local offsetX, offsetY = self:getLocationOffset(v)
+        local thisPayload = { x = payload.x - offsetX , y = payload.y - offsetY }        
+        v:receiveSignal(signal, payload)
+      end
+    end
+  end
+  issueView.signalHandlers.accept_resource_drop = function(self, signal, payload)    
+    self:messageOut(signal, payload)
+  end
   
   resourceView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {95,195,45,100}, padding = lc.padding(5) })
   
@@ -152,6 +173,7 @@ function love.load()
   table.insert(resourceView.outside, dragbox)
   table.insert(dragbox.outside, resourceView)
   table.insert(endTurnButton.outside, dragbox)
+  table.insert(issueView.outside, dragbox)
   dragbox.signalHandlers.resource_view_requesting_pickup = function( self, signal, payload )    
     if dragbox:getChild(1) then
       self:messageOut("view_returned", { view = dragbox:getChild(1) })
@@ -160,10 +182,24 @@ function love.load()
     dragbox:addChild(payload.view)
     self:messageOut("view_picked_up", { view = payload.view })
   end
+  
   dragbox.signalHandlers.turn_is_ending = function( self, signal, payload )
     if dragbox:getChild(1) then
       self:messageOut("view_returned", { view = dragbox:getChild(1) })
       dragbox:removeChild(dragbox:getChild(1))
+    end
+  end
+  
+  dragbox.signalHandlers.drop_resource = function( self, signal, payload )
+    if dragbox:getChild(1) then
+      self:messageOut("view_returned", { view = dragbox:getChild(1) })
+      dragbox:removeChild(dragbox:getChild(1))
+    end
+  end
+  
+  dragbox.signalHandlers.accept_resource_drop = function(self, signal, payload )    
+    if dragbox:getChild(1) then      
+      dragbox:removeChild(dragbox:getChild(1))      
     end
   end
   
@@ -222,31 +258,15 @@ function love.mousepressed(x, y, button)
   mouse.x = x
   mouse.y = y
       
-  local list = root:clickedViews(x,y)
-  
-  if selectedResource.key then
-    for k, v in ipairs(list) do
-      if issueLookup[v] then
-        local issue = issueLookup[v]
-        if issue:give(selectedResource.resource) then
-          table.remove( resources, selectedResource.key )
-          dragbox:removeChild(selectedResource.view)
-          selectedResource.resource.used = true
-          selectedResource = {}          
-          return
-        end
-      end
+  if dragbox:getChild(1) then
+    stackView:receiveSignal("resource_requesting_drop", { resource = resourceLookup[ dragbox:getChild(1) ].resource, x = mouse.x, y = mouse.y })
+    if dragbox:getChild(1) then
+      dragbox:receiveSignal("drop_resource", {})
     end
+  else
+    stackView:receiveSignal("leftclick", {x = mouse.x, y = mouse.y })
   end
   
-  stackView:receiveSignal("leftclick", {x = mouse.x, y = mouse.y })
-  
-  if selectedResource.key then
-    dropit()
-    return
-  end
-  
-
 end
 
 function getSeason()
@@ -270,9 +290,6 @@ end
 function endTheTurn()
   if not canEndTheTurn() then 
     return
-  end
-  if selectedResource.key then
-    dropit()
   end
   
   resolveAllIssues()

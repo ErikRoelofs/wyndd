@@ -32,7 +32,7 @@ function newIssue(issueType, name, options)
         self:selectNextOption()
       end
     end,
-    selectOption = function(self, option)
+    selectOption = function(self, option)    
       for i, opt in ipairs(self.options) do
         if opt == option then
           self.selected = i

@@ -21,7 +21,7 @@ return function(lc)
         local selectedFn = function() return myKey == selected() end                    
         local optionChild = lc:build("option", { option = option, highlighted = selectedFn })
         view:addChild(optionChild)
-        if key ~= 1 then
+        if key ~= options.issue.selected then
           optionChild.collapse()
         end
       end        

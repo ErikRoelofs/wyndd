@@ -10,7 +10,7 @@ return function(lc)
       container:addChild( lc:build( "text", {data = function() return options.option.name end, width="fill", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}, padding = lc.padding(5) }) )
       
       -- add the needs
-      local needsView = lc:build("linear", {height="wrap", width="fill", direction="h"})
+      local needsView = lc:build("linear", {height="wrap", width="fill", direction="h", padding = lc.padding(5), childSpacing = 5})
       for k, need in ipairs(options.option.needs) do
         needsView:addChild(lc:build("need", need))
       end
@@ -20,7 +20,7 @@ return function(lc)
       local gainsHeader = lc:build("text", {height="wrap", width="wrap", data = { value = "Gains: " }, padding = lc.padding(5) })
       container:addChild(gainsHeader)
       
-      local gainsView = lc:build("linear", {height="wrap", width="fill", direction="v", margin=lc.margin(0,0,0,5)})
+      local gainsView = lc:build("linear", {height="wrap", width="fill", direction="v", padding = lc.padding(5), childSpacing = 5 })
       for k, gain in ipairs(options.option.gains ) do
         gainsView:addChild(gain:getView())
       end

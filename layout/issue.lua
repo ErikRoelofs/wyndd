@@ -11,6 +11,8 @@ return function(lc)
       local view = lc:build("linear", {height="fill", width="wrap", direction="v", backgroundColor = bgColor})
       
       view.issue = options.issue
+      view.childSpacing = 5
+      view.padding = lc.padding(5)
       
       view:addChild(lc:build("text", {height="wrap", width="wrap", data = { value = options.issue.name }, padding = lc.padding(5) }))
       

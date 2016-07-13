@@ -44,7 +44,7 @@ local potentials = {
           name = "Give out the food, grow the populace",
           needs = {{"food"}, {"food"}},
           gains = {{"score", 100}},          
-        }
+        }       
       },      
       default = {
         name = "No food for you.",

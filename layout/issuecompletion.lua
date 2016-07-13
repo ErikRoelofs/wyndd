@@ -22,7 +22,7 @@ return function(lc)
         return self.successes + self.failures - 1
       end
             
-      local container = lc:build("linear", {direction = options.direction or "h", width = options.width, height = options.height, backgroundColor = options.backgroundColor, margin = options.margin, padding = options.padding})
+      local container = lc:build("linear", {direction = options.direction or "h", width = options.width, height = options.height, backgroundColor = options.backgroundColor, padding = options.padding})
       container.value = options.value     
       container.getSize = getSize
       container.getSuccesses = getSuccesses

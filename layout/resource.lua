@@ -26,7 +26,7 @@ end
 return function(lc)
   return {
     build = function (base, options)
-      local view = lc:build("image", { width = "wrap", height = "wrap", file = pickFile(options.type, options.consumable), margin=lc.margin(5)})
+      local view = lc:build("image", { width = "wrap", height = "wrap", file = pickFile(options.type, options.consumable) })
       return view      
       
     end,

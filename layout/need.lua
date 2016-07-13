@@ -27,7 +27,7 @@ return function(lc)
   return {
     build = function (base, options)
       local view = lc:build("stack", { width = "wrap", height = "wrap" } )
-      view:addChild( lc:build("image", { width = "wrap", height = "wrap", file = pickFile(options.type, options.hungry), margin = lc.margin(5)}))      
+      view:addChild( lc:build("image", { width = "wrap", height = "wrap", file = pickFile(options.type, options.hungry), }))
       view:addChild( lc:build("indicator", { value = function() return options.met end, padding = lc.padding(5) }))
       return view
     end,

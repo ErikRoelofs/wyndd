@@ -119,7 +119,7 @@ function love.load()
   returnResourcesButton = lc:build("text", {width=200, height="fill", data = function() return "Return resources" end, backgroundColor = { 100, 100, 100, 255 }, border = { color = { 125, 125, 125, 255 }, thickness = 2 }, gravity = {"center", "center"}, signalHandlers = { leftclick = function() returnAllResources(true) end } })
   layout:addChild(returnResourcesButton)
   
-  issueView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {100,200,50,100}, padding = lc.padding(5), weight=2})
+  issueView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {100,200,50,100}, padding = lc.padding(5), weight=3})
   issueView.signalHandlers.resource_requesting_drop = function(self, signal, payload) 
     local other = self:clickedViews(payload.x, payload.y)
     for i, v in ipairs(other) do
@@ -133,7 +133,7 @@ function love.load()
   issueView.signalHandlers.accept_resource_drop = "o"
   issueView.signalHandlers.resources_returned = "o"
   
-  resourceView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {95,195,45,100}, padding = lc.padding(5) })
+  resourceView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {95,195,45,100}, padding = lc.padding(10), childSpacing = 10 })
   
   resourceView.signalHandlers.leftclick = function(self, signal, payload)
     local other = self:clickedViews(payload.x, payload.y)

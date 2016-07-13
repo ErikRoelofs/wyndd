@@ -1,13 +1,19 @@
 function newOption( name, needs, gains, times, payoutEnd )
   needs = simplecopy(needs)
   gains = simplecopy(gains)
+  local function determinePayoutEnd()
+    if type(payoutEnd) == "boolean" then
+      return payoutEnd
+    end
+    return true
+  end
   return {
     name = name,
     needs = needs,
     gains = gains,    
     times = times or 1,
     startTimes = times or 1,
-    payoutEnd = payoutEnd or true,
+    payoutEnd = determinePayoutEnd(),
     shouldResolve = true,
     resources = {},
     resolve = function(self)
@@ -93,7 +99,7 @@ function buildOptionsFromTable(options)
 end
 
 function buildOptionFromTable(option)  
-  return newOption(option.name, buildNeedsFromTable(option.needs), buildRewardsFromTable(option.gains), option.times)
+  return newOption(option.name, buildNeedsFromTable(option.needs), buildRewardsFromTable(option.gains), option.times, option.payoutEnd)
 end
 
 function buildDefaultFromTable(default)
@@ -106,7 +112,8 @@ function buildIgnoreFromTable(ignore)
     name = ignore.name or "Ignore the issue",
     needs = {},
     gains = ignore.gains or {},
-    times = ignore.times
+    times = ignore.times,
+    payoutEnd = false
   }
   local option = buildOptionFromTable(options)
   option.shouldResolve = false

@@ -1,10 +1,6 @@
 --[[  
   - build some issue decks  
   - work on a proper UI, with scrolling probably < using renderer
-  - make multi-option issues a thing
-  
-  issues:
-  - receiving multiple copies of certain issues at the same time is a problem (ie; "new faction" x2)
   
   - multi-resources
   - create proper graphics

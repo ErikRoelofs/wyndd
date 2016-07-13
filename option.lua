@@ -69,6 +69,7 @@ function newOption( name, needs, gains, times, payoutEnd )
       end      
     end,
     returnResources = function(self, allOfThem)
+      resourcesReturned = {}
       if not allOfThem then
         self:cleanHungry()
       end
@@ -78,11 +79,13 @@ function newOption( name, needs, gains, times, payoutEnd )
         if allOfThem or not resource.consumable then
           resource.used = false
           table.insert(resources, resource)
+          table.insert(resourcesReturned, resource)
         end
         table.remove(self.resources, r)
         r = r -1
       end
-      self:allNeedsNotMet()      
+      self:allNeedsNotMet()
+      return resourcesReturned
     end,
     canSelect = function(self)
       return true

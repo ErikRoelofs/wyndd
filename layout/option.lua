@@ -48,7 +48,8 @@ return function(lc)
       end
 
       container.signalHandlers.unselected = function(self, signal, payload)
-        print("I was unselected :(")
+        local returned self.option:returnResources(true)
+        self:messageOut("resources_returned", returned )        
       end
 
       return container

@@ -26,6 +26,9 @@ return function(lc)
         self.children[self.issue.selected + 1]:receiveSignal("unselected", {})
         self.issue:selectOption(payload.option)
       end
+      view.signalHandlers.resources_returned = function(self, signal, payload)
+        self:messageOut(signal, payload)        
+      end
       view.signalHandlers.resource_requesting_drop = function(self, signal, payload)        
         if self.issue:give(payload.resource) then
           payload.resource.used = true

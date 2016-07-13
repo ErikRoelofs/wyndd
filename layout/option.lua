@@ -1,14 +1,13 @@
 return function(lc)
   return {
     build = function (base, options)
-      local container = lc:build("linear", {direction = "v", width = "wrap", height = "wrap", backgroundColor = {0,0,255,255}, padding = lc.padding(10)})
-      
+      local container = lc:build("linear", {direction = "v", width = "wrap", height = "wrap", backgroundColor = {0,0,255,255}, padding = lc.padding(10)})      
       container.option = options.option
       container.selectable = function() return options.option:canSelect() end
       container.highlighted = options.highlighted
       
       -- add the name
-      container:addChild( lc:build( "text", {data = function() return options.option.name end, width="wrap", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}, padding = lc.padding(5) }) )
+      container:addChild( lc:build( "text", {data = function() return options.option.name end, width="fill", height="wrap", backgroundColor = {255,0,0,255}, textColor={0,255,0,255}, padding = lc.padding(5) }) )
       
       -- add the needs
       local needsView = lc:build("linear", {height="wrap", width="fill", direction="h"})
@@ -18,7 +17,8 @@ return function(lc)
       container:addChild(needsView)
 
       -- add the gains      
-      container:addChild(lc:build("text", {height="wrap", width="wrap", data = { value = "Gains: " }, padding = lc.padding(5) }))
+      local gainsHeader = lc:build("text", {height="wrap", width="wrap", data = { value = "Gains: " }, padding = lc.padding(5) })
+      container:addChild(gainsHeader)
       
       local gainsView = lc:build("linear", {height="wrap", width="fill", direction="v", margin=lc.margin(0,0,0,5)})
       for k, gain in ipairs(options.option.gains ) do
@@ -26,7 +26,8 @@ return function(lc)
       end
       container:addChild(gainsView)
 
-      container:addChild(lc:build("text", {height="wrap", width="wrap", data = function() return options.option.times .. "/" .. options.option.startTimes end }))
+      local resolveView = lc:build("text", {height="wrap", width="wrap", data = function() return options.option.times .. "/" .. options.option.startTimes end })
+      container:addChild(resolveView)
 
       container.update = function(self, dt)
         if self:selectable() then
@@ -42,18 +43,32 @@ return function(lc)
           child:update(dt)
         end
       end
+      
+      container.collapse = function()
+        needsView.visibility = "gone"
+        gainsView.visibility = "gone"
+        gainsHeader.visibility = "gone"
+        resolveView.visibility = "gone"
+      end
+      container.expand = function()
+        needsView.visibility = "visible"
+        gainsView.visibility = "visible"        
+        gainsHeader.visibility = "visible"
+        resolveView.visibility = "visible"
+      end
 
       container.signalHandlers.leftclick = function(self, signal, payload)
         if self:selectable() then
-          self:messageOut("selected", { option = container.option } )
+          self.expand()
+          self:messageOut("selected", { option = container.option } )          
         end
       end
 
       container.signalHandlers.unselected = function(self, signal, payload)
         local returned self.option:returnResources(true)
-        self:messageOut("resources_returned", returned )        
-      end
-
+        self.collapse()
+        self:messageOut("resources_returned", returned )
+      end      
       return container
     end,
     schema = {
@@ -64,7 +79,7 @@ return function(lc)
       highlighted = {
         required = true,
         schemaType = "function"
-      }
+      }      
     }
     --[[
     schema = 

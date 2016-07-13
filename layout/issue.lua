@@ -19,12 +19,19 @@ return function(lc)
       for key, option in ipairs(options.issue.options) do
         local myKey = key
         local selectedFn = function() return myKey == selected() end                    
-        view:addChild(lc:build("option", { option = option, highlighted = selectedFn }))
+        local optionChild = lc:build("option", { option = option, highlighted = selectedFn })
+        view:addChild(optionChild)
+        if key ~= 1 then
+          optionChild.collapse()
+        end
       end        
       
       view.signalHandlers.selected = function(self, signal, payload)
-        self.children[self.issue.selected + 1]:receiveSignal("unselected", {})
-        self.issue:selectOption(payload.option)
+        if payload.option ~= self.issue.options[self.issue.selected] then
+          self.children[self.issue.selected + 1]:receiveSignal("unselected", {})
+          self.issue:selectOption(payload.option)
+          self:layoutingPass()
+        end
       end
       view.signalHandlers.resources_returned = function(self, signal, payload)
         self:messageOut(signal, payload)        

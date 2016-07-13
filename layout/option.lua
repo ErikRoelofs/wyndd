@@ -44,7 +44,9 @@ return function(lc)
       end
 
       container.signalHandlers.leftclick = function(self, signal, payload)
-        self:messageOut("selected", { option = container.option } )
+        if self:selectable() then
+          self:messageOut("selected", { option = container.option } )
+        end
       end
 
       container.signalHandlers.unselected = function(self, signal, payload)

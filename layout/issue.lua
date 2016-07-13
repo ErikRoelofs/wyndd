@@ -24,7 +24,7 @@ return function(lc)
         if key ~= options.issue.selected then
           optionChild.collapse()
         end
-      end        
+      end
       
       view.signalHandlers.selected = function(self, signal, payload)
         if payload.option ~= self.issue.options[self.issue.selected] then
@@ -33,9 +33,7 @@ return function(lc)
           self:layoutingPass()
         end
       end
-      view.signalHandlers.resources_returned = function(self, signal, payload)
-        self:messageOut(signal, payload)        
-      end
+      view.signalHandlers.resources_returned = "o"
       view.signalHandlers.resource_requesting_drop = function(self, signal, payload)        
         if self.issue:give(payload.resource) then
           payload.resource.used = true

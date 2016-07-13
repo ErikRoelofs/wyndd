@@ -108,16 +108,9 @@ function love.load()
   stackView = lc:build("stackroot", {})
   root = lc:build("linear", {width = "fill", height="fill", direction="v"})
   stackView:addChild(root)
-  root.signalHandlers.resource_requesting_drop = function(self, signal, payload)
-    self:signalChildren(signal, payload)
-  end
-  root.signalHandlers.resources_returned = function(self, signal, payload)
-    resourceView:receiveSignal(signal, payload)    
-  end
+  root.signalHandlers.resource_requesting_drop = "c"  
 
-  stackView.signalHandlers.resource_requesting_drop = function(self, signal, payload)
-    self:signalChildren(signal, payload)
-  end
+  stackView.signalHandlers.resource_requesting_drop = "c"
   
   local layout = lc:build("linear", {width = "fill", height = 25, backgroundColor = {105,205,55,100}, direction = "h"})
   
@@ -141,12 +134,8 @@ function love.load()
       end
     end
   end
-  issueView.signalHandlers.accept_resource_drop = function(self, signal, payload)    
-    self:messageOut(signal, payload)
-  end
-  issueView.signalHandlers.resources_returned = function(self, signal, payload)
-    self:messageOut(signal, payload)
-  end
+  issueView.signalHandlers.accept_resource_drop = "o"
+  issueView.signalHandlers.resources_returned = "o"
   
   resourceView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {95,195,45,100}, padding = lc.padding(5) })
   
@@ -169,6 +158,7 @@ function love.load()
   resourceView.signalHandlers.resources_returned = function(self, signal, payload)  
     redrawResources()
   end
+  root.signalHandlers.resources_returned = resourceView
   
   factionView = lc:build("linear", {width="fill", height="fill", direction="h", backgroundColor = {90,190,40,100}, padding = lc.padding(5)})
   

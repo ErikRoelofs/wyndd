@@ -151,6 +151,7 @@ function love.load()
   end
   resourceView.signalHandlers.view_returned = function(self, signal, payload)
     self:addChild(payload.view)
+    self:layoutingPass()
   end
   resourceView.signalHandlers.resources_returned = function(self, signal, payload)  
     redrawResources()

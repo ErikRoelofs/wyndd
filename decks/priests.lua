@@ -12,10 +12,22 @@ local potentials = {
     issue = {
       type = "problem",
       name = "Sacrifice a bull",
-      needs = { {"faith"}, {"might"}},
-      gains = {{"standing", "priests", 1}, {"standing", "peasants", -1}},
-      losses = {{"standing", "priests", -1}, {"standing", "peasants", 1}},
-      delayed = 2,
+      options = {
+        {
+          name = "These blessings are worth more than a bull",
+          needs = {{"might"}},
+          gains = {{"standing", "priests", 1}, {"standing", "peasants", -1}},
+        },
+        {
+          name = "Let the priests find some other creature.",
+          needs = {{"official"}},
+          gains = {{"standing", "priests", -1}, {"standing", "peasants", 1}},
+        }
+      },
+      default = {
+        name = "Let them fight it out",
+        gains = {{"standing", "priests", -1}, {"standing", "peasants", -1}},
+      }            
     },
     validator = { "seasonal", "autumn" },
     faction = "priests"
@@ -25,9 +37,17 @@ local potentials = {
     issue = {
       type = "opportunity",
       name = "Give blessing",
-      needs = { {"faith"}},
-      gains = {{"score", 1}},
-      losses = {},
+      options = {
+        {
+          name = "Let them give their blessings",
+          needs = { {"faith"}},
+          gains = {{"score", 1}},
+        }
+      },
+      default = {
+        name = "We don't have time for this nonsense.",
+        gains = {},
+      }
     },
     validator = {"always"},
     faction = "priests"

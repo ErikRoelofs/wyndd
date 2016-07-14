@@ -85,7 +85,7 @@ function love.load()
   
   convert( require "decks/peasants" )
   convert( require "decks/guilds" )
-  --convert( require "decks/priests" )
+  convert( require "decks/priests" )
   convertBase( require "decks/base" )
   
 

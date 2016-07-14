@@ -19,10 +19,18 @@ local potentials = {
     issue = {
       type = "problem",
       name = "Guild Strike",
-      needs = { {"might"}},
-      gains = {{"score", 2}},
-      losses = {{"score", -5}},
-      delayed = 2,
+      options = {
+        {
+          name = "This is not tolerated.",
+          needs = { {"might"}},
+          gains = {{"score", 2}},
+        },
+      },
+      default = {
+        name = "Whatever.",
+        times = 2,
+        gains = {{"score", -5}},
+      },
     },
     validator = { "arithmetic", "guilds", "standing", 5, "<" },
     faction = "guilds"
@@ -32,9 +40,17 @@ local potentials = {
     issue = {
       type = "problem",
       name = "Material shortages",
-      needs = { {"wealth"}, {"wealth"}},
-      gains = {{"score", 10}},
-      losses = {{"power", "guilds", -1}},      
+      options = {
+        {
+          name = "Give them assistence",
+          needs = { {"wealth"}, {"wealth"}},
+          gains = {{"score", 10}},
+        }
+      },
+      default = {
+        name = "They made this mess, they fix it.",
+        gains = {{"power", "guilds", -1}},
+      }
     },
     validator = { "always" },
     faction = "guilds"
@@ -44,9 +60,17 @@ local potentials = {
     issue = {
       type = "opportunity",
       name = "Trade mission",
-      needs = { {"wealth"}},
-      gains = {{"score", 3}},
-      losses = {},
+      options = {
+        {
+          name = "Help them set it up.",
+          needs = { {"wealth"}},
+          gains = {{"score", 3}},
+        }
+      },
+      default = {
+        name = "No assistence",        
+        gains = {},
+      }
     },
     validator = { "arithmetic", "guilds", "power", 3, ">" },
     faction = "guilds"
@@ -56,10 +80,28 @@ local potentials = {
     issue = {
       type = "opportunity",
       name = "New technology",
-      needs = { {"wealth"},{"wealth"},{"wealth"}},
-      gains = {{"power", "guilds", 2}},
-      losses = {{"power", "guilds", -1}},      
-      delayed = 2,
+      options = {
+        {
+          name = "Invest heavily.",
+          needs = { {"wealth"},{"wealth"},{"wealth"}},
+          gains = {{"power", "guilds", 2}, {"score", 15}},
+          times = 2,
+        },
+        {
+          name = "Invest.",
+          needs = { {"wealth"} },
+          gains = {{"power", "guilds", 1}, {"score", 2}},
+          times = 2
+        }
+      },
+      default = {
+        name = "Our current technology is fine.",
+        gains = {{"power", "guilds", -1}},
+      },
+      ignorable = {
+        times = 3,
+        name = "Invest later."
+      }
     },
     validator = { "rare" },
     faction = "guilds"
@@ -69,11 +111,25 @@ local potentials = {
     issue = {
       type = "opportunity",
       name = "A new trade route",
-      needs = { {"wealth"}, {"wealth"}, {"might"}},
-      gains = {{"score", 20}, {"resource", "wealth"}},
-      losses = {{"standing", "guilds", -2}},
-      repeats = 5,
-      delayed = 3,
+      options = {
+        {
+          name = "Secure the entire route.",
+          needs = { {"wealth"}, {"wealth"}, {"might"}},
+          gains = {{"score", 20}, {"resource", "wealth"}},
+          times = 3
+        },
+        {
+          name = "Setup minor caravans",
+          need = { {"wealth"} },
+          gains = {{"score", 10}},
+          times = 2
+        }
+      },
+      default = {
+        name = "Leave it to others.",
+        gains = {{"standing", "guilds", -2}},
+        times = 3
+      }
     },
     validator = { "rare" },
     faction = "guilds"
@@ -83,11 +139,23 @@ local potentials = {
     issue = {
       type = "opportunity",
       name = "Build a cathedral",
-      needs = { {"wealth"}, {"wealth"}},
-      gains = {{"score", 100}},
-      losses = {{"standing", "guilds", -2}},
-      repeats = 10,
-      delayed = 5,
+      options = {
+        {
+          name = "Build now",
+          needs = { {"wealth"}, {"wealth"}},
+          gains = {{"score", 100}},
+          times = 10,
+        }
+      },
+      ignorable = {
+        name = "Build later.",
+        gains = {{"score", -2}},
+        times = 5
+      },
+      default = {
+        name = "Abandon the project",
+        gains = {{"standing", "guilds", -2}, {"score", -20}}
+      }
     },
     validator = { "rare" },
     faction = "guilds"

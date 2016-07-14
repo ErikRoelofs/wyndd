@@ -8,7 +8,7 @@ return function(lc)
         bgColor = {0,150,0,255}
       end
       
-      local view = lc:build("linear", {height="fill", width=250, direction="v", backgroundColor = bgColor})
+      local view = lc:build("linear", {height="fill", width=300, direction="v", backgroundColor = bgColor})
       
       view.issue = options.issue
       view.childSpacing = 5

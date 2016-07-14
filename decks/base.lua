@@ -41,8 +41,8 @@ local potentials = {
       name = "Expanding the population",
       options = {
         {
-          name = "Give out the food, grow the populace",
-          needs = {{"food"}, {"food"}},
+          name = "Spread the food, grow the populace",
+          needs = {{"food", true}, {"food", true}},
           gains = {{"score", 100}},          
         }       
       },      
@@ -55,31 +55,30 @@ local potentials = {
         gains = {{"score", -1}}
       }
     },
-    validator = { "always" },
-    faction = "base"
-  },
-
-  --[[
-  {
-    identifier = "base_population_growth",
-    issue = {
-      type = "opportunity",
-      name = "Expanding the population",
-      needs = {{"food", true}, {"food", true}},
-      gains = {{"score", 100}},
-      losses = {},      
-    },
     validator = { "rare" },
     faction = "base"
   },
+
   {
     identifier = "base_investments",
     issue = {
       type = "opportunity",
       name = "Investing in the future",
-      needs = {{"wealth", true}, {"wealth", true}},
-      gains = {{"score", 100}},
-      losses = {},      
+      options = {
+        {
+          name = "Spend the money, own the future.",
+          needs = {{"wealth", true}, {"wealth", true}},
+          gains = {{"score", 100}},
+        },
+      },
+      default = {
+        name = "It's mine, mine I tell you!",
+        gains = {}
+      },
+      ignorable = {
+        times = 3,
+        gains = {{"score", -1}}
+      }      
     },
     validator = { "rare" },
     faction = "base"
@@ -88,10 +87,22 @@ local potentials = {
     identifier = "base_fortifications",
     issue = {
       type = "opportunity",
-      name = "Permanent fortifications",
-      needs = {{"might", true}, {"might", true}},
-      gains = {{"score", 100}},
-      losses = {},      
+      name = "Erect permanent fortifications",
+      options = {
+        {
+          name = "I have the power!",
+          needs = {{"might", true}, {"might", true}},
+          gains = {{"score", 100}},
+        }
+      },
+      default = {
+        name = "Who cares about safety?",
+        gains = {},      
+      },
+      ignorable = {
+        times = 3,
+        gains = {{"score", -1}}
+      }
     },
     validator = { "rare" },
     faction = "base"
@@ -101,13 +112,26 @@ local potentials = {
     issue = {
       type = "opportunity",
       name = "Religious celebrations",
-      needs = {{"faith", true}, {"faith", true}},
-      gains = {{"score", 100}},
-      losses = {},      
+      options = {
+        {
+          name = "Party on!",
+          needs = {{"faith", true}, {"faith", true}},
+          gains = {{"score", 100}},
+        },
+      },
+      default = {
+        name = "Be humble.",
+        gains = {}
+      },
+      ignorable = {
+        times = 3,
+        gains = {{"score", -1}}
+      }
     },
     validator = { "rare" },
     faction = "base"
   },
+  --[[
   {
     identifier = "base_nobles",
     issue = {

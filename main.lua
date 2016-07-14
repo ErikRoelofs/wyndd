@@ -1,5 +1,5 @@
 --[[  
-  - build some issue decks  
+  - rebuild the issue decks  
   - work on a proper UI, with scrolling probably < using renderer
   
   - multi-resources
@@ -83,7 +83,7 @@ function love.load()
     return availableFactions[id]
   end
   
-  --convert( require "decks/peasants" )
+  convert( require "decks/peasants" )
   --convert( require "decks/guilds" )
   --convert( require "decks/priests" )
   convertBase( require "decks/base" )

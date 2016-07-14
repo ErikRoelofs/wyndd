@@ -24,10 +24,21 @@ local potentials = {
     issue = {
       type = "problem",
       name = "Peasant revolt",
-      needs = { {"might"}, {"might"}, {"might"}, {"might"} },
-      gains = {{"power", "peasants", -3}},
-      losses = {{"game_end"}},
-      delayed = 3,
+      options = {
+        {
+          name = "Strike them down!",
+          needs = { {"might"}, {"might"}, {"might"}, {"might"} },
+          gains = {{"power", "peasants", -3}},
+        }
+      },
+      default = {
+        name = "Flee the country",
+        gains = {{"game_end"}},
+      },
+      ignorable = {
+        times = 3,
+        gains = {}
+      }      
     },
     validator = { "never" },
     faction = "peasants"
@@ -37,10 +48,20 @@ local potentials = {
     issue = {
       type = "problem",
       name = "Peasant uprising",
-      needs = { {"might"}, {"might"}, {"might"} },
-      gains = {{"power", "peasants", -2}},
-      losses = {{"score", -10}, {"issue", "peasant_riot_3"}},
-      delayed = 3,
+      options = {
+        {
+          name = "Face them, head on",
+          needs = { {"might"}, {"might"}, {"might"} },
+          gains = {{"power", "peasants", -2}},
+        }
+      },
+      default = {
+        name = "Let the problem grow.",
+        gains = {{"score", -10}, {"issue", "peasant_riot_3"}},
+      },
+      ignorable = {
+        times = 3
+      }      
     },
     validator = { "never" },
     faction = "peasants"
@@ -50,10 +71,20 @@ local potentials = {
     issue = {
       type = "problem",
       name = "Peasant riot",
-      needs = { {"might"}, {"might"} },
-      gains = {{"power", "peasants", -1}},
-      losses = {{"score", -5}, {"issue", "peasant_riot_2"}},
-      delayed = 3,
+      options = {
+        {
+          name = "Put them in their place.",
+          needs = { {"might"}, {"might"} },
+          gains = {{"power", "peasants", -1}},
+        }
+      },
+      default = {
+        name = "Let them have their fun.",
+        gains = {{"score", -5}, {"issue", "peasant_riot_2"}},
+      },
+      ignorable = {
+        times = 3,
+      }
     },
     validator = { "arithmetic", "peasants", "standing", 3, "<" },
     faction = "peasants"
@@ -62,10 +93,18 @@ local potentials = {
     identifier = "peasant_hunger",
     issue = {
       type = "problem",
-      name = "Famine",
-      needs = { {"food"} },
-      gains = {{"standing", "peasants", 1}},
-      losses = {{"power", "peasants", -1}}
+      name = "Famine strikes.",
+      options = {
+        {
+          name = "Feed them from your reserves.",
+          needs = { {"food"} },
+          gains = {{"standing", "peasants", 1}},
+        }
+      },
+      default = {
+        name = "Let them starve.",
+        gains = {{"power", "peasants", -1}}
+      }
     },
     validator = { "seasonal", "winter" },
     faction = "peasants"
@@ -75,9 +114,17 @@ local potentials = {
     issue = {
       type = "opportunity",
       name = "Bountiful Harvest",
-      needs = { {"might"} },
-      gains = {{"resource", "food", true}},
-      losses = {{"standing", "peasants", 1}}
+      options = {
+        {
+          name = "Bring it to your granaries.",
+          needs = { {"might"} },
+          gains = {{"resource", "food", true}},
+        }
+      },
+      default = {
+        name = "Let them keep it.",
+        gains = {{"standing", "peasants", 1}}
+      }
     },
     validator = { "OR", {{ "seasonal", "autumn" }, { "seasonal", "summer" }}},
     faction = "peasants"
@@ -87,21 +134,37 @@ local potentials = {
     issue = {
       type = "opportunity",
       name = "Summer Festivities",
-      needs = { {"wealth"} },
-      gains = {{"power", "peasants", 1}},
-      losses = {}
+      options = {
+        {
+          name = "Make it a grand festival.",
+          needs = { {"wealth"} },
+          gains = {{"power", "peasants", 1}},
+        },
+      },
+      default = {
+        name = "Let them pay for their own.",
+        gains = {}
+      }
     },
     validator = { "seasonal", "summer" },
     faction = "peasants"
-  },  
+  },
   {
     identifier = "peasant_militia",
     issue = {
       type = "opportunity",
       name = "Raise Militia",
-      needs = { {"wealth"} },
-      gains = {{"power", "peasants", -1}, {"resource", "might"}},
-      losses = {}
+      options = {
+        {
+          name = "Recruit the able-bodied.",
+          needs = { {"wealth"} },
+          gains = {{"power", "peasants", -1}, {"resource", "might"}}
+        },
+      },
+      default = {
+        name = "We can't afford more troops",
+        gains = {}
+      }
     },
     validator = { "arithmetic", "peasants", "power", 5, ">" },
     faction = "peasants"
@@ -111,9 +174,17 @@ local potentials = {
     issue = {
       type = "opportunity",
       name = "Draft soldiers",
-      needs = { {"might"}, {"might"} },
-      gains = {{"power", "peasants", -1}, {"standing", "peasants", -1}, {"resource", "might"}},
-      losses = {}
+      options = {
+        {
+          name = "Conscript the able-bodied, whether they like it or not.",
+          needs = { {"might"}, {"might"} },
+          gains = {{"power", "peasants", -1}, {"standing", "peasants", -1}, {"resource", "might"}},
+        },
+      },
+      default = {
+        name = "Leave them be, for now.",
+        gains = {}
+      }
     },
     validator = { "arithmetic", "peasants", "power", 3, ">" },
     faction = "peasants"
@@ -123,9 +194,18 @@ local potentials = {
     issue = {
       type = "opportunity",
       name = "Expand farmlands",
-      needs = { {"might"}, {"wealth"} },
-      gains = {{"power", "peasants", 1}, {"score", 5}},
-      losses = {}
+      options = {
+        {
+          name = "Set up an expedition.",
+          needs = { {"might"}, {"wealth"} },
+          gains = {{"power", "peasants", 1}, {"score", 5}},
+          times = 2
+        }
+      },
+      default = {
+        name = "Let them try on their own.",
+        gains = {{"score", -2}},
+      }
     },
     validator = { "rare" },
     faction = "peasants"
@@ -134,12 +214,25 @@ local potentials = {
     identifier = "peasant_taxation",
     issue = {
       type = "opportunity",
-      name = "Hefty taxation",
-      needs = { {"might"}, {"might"} },
-      gains = {{"standing", "peasants", -2}, {"resource", "wealth"}},
-      losses = {},
-      repeats = 4,
-      delayed = 3
+      name = "Raise taxes",
+      options = {
+        {
+          name = "High taxes",
+          needs = { {"might"} },
+          gains = {{"standing", "peasants", -1}, {"resource", "wealth", true}},
+          times = 2
+        },
+        {
+          name = "Excessive taxes",
+          needs = { {"might"}, {"might"} },
+          gains = {{"standing", "peasants", -2}, {"resource", "wealth"}},
+          times = 3
+        }
+      },
+      default = {
+        name = "Regular taxes.",
+        gains = {}
+      },
     },
     validator = { "always" },
     faction = "peasants"
@@ -149,11 +242,23 @@ local potentials = {
     issue = {
       type = "opportunity",
       name = "Build a Mill",
-      needs = { {"wealth"}, {"wealth"} },
-      gains = {{"standing", "peasants", 1}, {"resource", "food"}},
-      losses = {},
-      repeats = 3,
-      delayed = 3,
+      options = {
+        {
+          name = "Help build the mill",
+          needs = { {"wealth"}, {"wealth"} },
+          gains = {{"standing", "peasants", 1}, {"resource", "food"}},
+          times = 3,
+        }
+      },
+      default = {
+        name = "Let them struggle alone.",
+        gains = {{"score", -10}}
+      },
+      ignorable = {
+        name = "Promise help later.",
+        gains = {{"score", -1}},
+        times = 3
+      }      
     },
     validator = { "always" },
     faction = "peasants"
@@ -163,24 +268,47 @@ local potentials = {
     issue = {
       type = "opportunity",
       name = "Raise a Barn",
-      needs = { {"wealth"} },
-      gains = {{"score", 3}},
-      losses = {},
-      repeats = 2,      
+      options = {
+        {
+          name = "Help raising the barn",
+          needs = { {"wealth"} },
+          gains = {{"score", 3}},
+          times = 2,
+        },
+      },
+      default = {
+        name = "It is their own problem",
+        gains = {},
+      },
     },
     validator = { "always" },
     faction = "peasants"
-  },
+  },  
  {
     identifier = "peasant_bandits",
     issue = {
       type = "problem",
       name = "Bandit activity",
-      needs = { {"might"}, {"might"} },
-      gains = {{"standing", "peasants", 1}, {"score", 10}},
-      losses = {{"score", -5}, {"standing", "peasants", -1}},
-      persistent = true,
-      repeats = 2
+      options = {
+        {
+          name = "Flush out these bandits.",
+          needs = { {"might"}, {"might"} },
+          gains = {{"standing", "peasants", 1}, {"score", 10}},
+          times = 3
+        },
+        {
+          name = "Increase patrols.",
+          needs = { {"might"} },
+          gains = {{"score", 3}},
+          times = 3
+        }
+      },
+      default = {
+        name = "Let them rob the peasants",
+        gains = {{"score", -5}, {"standing", "peasants", -1}},
+        times = 5,
+        payoutEnd = false,
+      }
     },
     validator = { "always" },
     faction = "peasants"
@@ -190,9 +318,17 @@ local potentials = {
     issue = {
       type = "problem",
       name = "Withering crops",
-      needs = { {"faith"}, {"wealth"} },
-      gains = {{"score", 5}},
-      losses = {{"power", "peasants", -1}, {"lose_resource", "food"}}
+      options = {
+        {
+          name = "Help them, any way you can",
+          needs = { {"faith"}, {"wealth"} },
+          gains = {{"score", 5}},
+        }
+      },
+      default = {
+        name = "Leave the crops to sort themselves out.",
+        gains = {{"power", "peasants", -1}, {"lose_resource", "food"}}
+      },
     },
     validator = { "seasonal", "spring" },
     faction = "peasants"
@@ -202,9 +338,17 @@ local potentials = {
     issue = {
       type = "problem",
       name = "Swarms of Locust",
-      needs = { {"faith"}, {"wealth"}, {"wealth"}, {"food"} },
-      gains = {{"score", 25}},
-      losses = {{"power", "peasants", -2}, {"lose_resource", "food"}, {"lose_resource", "food"}}
+      options = {
+        {
+          name = "Do whatever it takes!",
+          needs = { {"faith"}, {"wealth"}, {"wealth"}, {"food"} },
+          gains = {{"score", 25}},
+        },
+      },
+      default = {
+        name = "Every man for himself.",        
+        gains = {{"power", "peasants", -2}, {"lose_resource", "food"}, {"lose_resource", "food"}}
+      }
     },
     validator = { "AND", {{"rare"}, {"seasonal", "spring"} }},
     faction = "peasants"
@@ -214,11 +358,27 @@ local potentials = {
     issue = {
       type = "problem",
       name = "Land disputes",
-      needs = { {"official"},{"might"} },
-      gains = {{"score", 10}, {"standing", "peasants", 1}},
-      losses = {{"score", -10}, {"power", "peasants", -1}},
-      repeats = 3,
-      delayed = 4
+      options = {
+        {
+          name = "Oversee the dispute, enforce the judgement.",
+          needs = { {"official"},{"might"} },
+          gains = {{"score", 10}, {"standing", "peasants", 1}},
+          times = 3,
+        },
+        {
+          name = "Judge swiftly, and harshly.",
+          needs = {{"might"},{"might"}},
+          gains = {{"score", 10}}
+        },
+      },
+      ignorable = {
+        times = 4,
+        gains = {}
+      },
+      default = {
+        name = "Let them settle their own disputes.",
+        gains = {{"score", -10}, {"power", "peasants", -1}},
+      },      
     },
     validator = { "rare" },
     faction = "peasants"

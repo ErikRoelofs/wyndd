@@ -120,7 +120,7 @@ local potentials = {
         },
         {
           name = "Setup minor caravans",
-          need = { {"wealth"} },
+          needs = { {"wealth"} },
           gains = {{"score", 10}},
           times = 2
         }

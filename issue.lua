@@ -6,7 +6,7 @@ function newIssue(issueType, name, options)
     type = issueType,
     name = name,
     options = options,
-    selected = 1,
+    selected = #options,
     resolve = function(self)
       local isDone = self.options[self.selected]:resolve()
       if not isDone then
@@ -103,10 +103,10 @@ end
 
 function buildIssueFunctionFromTable(issueTable)      
     local options = buildOptionsFromTable(issueTable.options)
-    table.insert(options, buildDefaultFromTable(issueTable.default))
     if issueTable.ignorable then
       table.insert(options, buildIgnoreFromTable(issueTable.ignorable ))
     end
+    table.insert(options, buildDefaultFromTable(issueTable.default))
     
     return function()
       return newIssue(issueTable.type, issueTable.name, options)

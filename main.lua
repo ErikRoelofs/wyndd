@@ -232,6 +232,7 @@ end
 
 function love.draw(dt)
   if gameOver then
+    love.graphics.setColor(255,255,255,255)
     love.graphics.print("game over", 50, 50)
     love.graphics.print("final score: " .. score , 50, 70)
     love.graphics.print("final turn: " .. getSeason() .. ", year: " .. getYear(), 50, 90)

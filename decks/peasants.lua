@@ -176,7 +176,7 @@ local potentials = {
       name = "Draft soldiers",
       options = {
         {
-          name = "Conscript the able-bodied, whether they like it or not.",
+          name = "Conscript the able-bodied.",
           needs = { {"might"}, {"might"} },
           gains = {{"power", "peasants", -1}, {"standing", "peasants", -1}, {"resource", "might"}},
         },
